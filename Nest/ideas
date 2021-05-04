@@ -1,0 +1,40 @@
+We have only the smb port open. 
+
+Let's try an anonymous login. `./smbclient root@10.10.10.178`
+Under the "Data" share, on Shared/Templates/HR we have the 'Welcome Email.txt'. This file contains the Username and password for the authentificated SMB.
+
+
+Unintended way (patched)
+With the data, we try different smb exploits, and the psexec works! `./psexec.py TempUser:welcome2019@10.10.10.178`
+We notice something that's odd, we are `nt authority\system`
+The root flag is under Administrator. 
+The user flag is `C:\Shares\Users\C.Smith`
+
+Intended way.
+Looking into `Data/Configs/NotepadPlusPlus/config.xml` at the bottom of the script we have this mention `<File filename="\\HTB-NEST\Secure$\IT\Carl\Temp.txt" />` which leads us to search more in depth this smb client. 
+If we use the share Secure$ we find out that we can only list `\Secure$\IT\Carl`, there isn't any file called `Temp.txt`
+
+Recon \IT\Carl over the Secure$ share & decrypt the password.
+First of all, looking into all the directories, the only one that seems interesting is `VB Projects` under WIP directory we have the full source code of the RU-Scanner which we encounterd in out initial recon, under the `Data\IT\Configs\RU_Scanner` in there being a password leaked. 
+Getting most of the files from the smb server we ended up looking into `Utils.vb` which seems to have the encryption and decryption algorithms. We will use a site to transform this into C# code and we will run it into a compiler and add the Main method to get the password decrypted. The final form of the file is into `decryptor.c#`. Now having the password we can relogin into SMBClient and get the user flag.
+
+Heading to root.
+In the SMB client we have two new things, `HqkLdap.exe` and `debugpassword`. The second file is all about windows alternate datastream and it must be directly downloaded on a windows box.
+Now let's connect tot the hight port service (4386) and use `debug WBQ201953D8w` to get acess to everything. Looking into some directories under `setdir ../ldap` we can `showquerry 2` and get the encrypted administrator password. 
+For this part we will need dnSpy to make things easier and the same website we used in the first part. I fast crafter the needed file ( found under admin.c# ). Now because we don't have acess to windows remote manager (WinRM) we will use psexec because we have access to all shares to write, `./psexec.py Administrator:XtH4nkS4Pl4y1nGX@10.10.10.178`.
+
+Rooted intended. 
+
+Credentials:
+-> TempUser:welcome2019
+-> c.smith:xRxRxPANCAK3SxRxRx
+-> Debug password: WBQ201953D8w
+-> Administrator: XtH4nkS4Pl4y1nGX (encrypted, yyEq0Uvvhq2uQOcWG8peLoeRQehqip/fKdeG/kjEVb4=)
+
+Flags:
+-> User: cf71b25404be5d84fd827e05f426e987
+-> Root: 6594c2eb084bc0f08a42f0b94b878c41
+
+Articles:
+-> http://converter.telerik.com/ ( From .vb to C# )
+-> https://dotnetfiddle.net/

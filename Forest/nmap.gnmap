@@ -1,0 +1,4 @@
+# Nmap 7.80 scan initiated Fri Nov  1 14:48:33 2019 as: nmap -sC -sV -oA nmap 10.10.10.161
+Host: 10.10.10.161 ()	Status: Up
+Host: 10.10.10.161 ()	Ports: 135/open/tcp//msrpc//Microsoft Windows RPC/, 139/open/tcp//netbios-ssn//Microsoft Windows netbios-ssn/, 389/open/tcp//ldap//Microsoft Windows Active Directory LDAP (Domain: htb.local, Site: Default-First-Site-Name)/, 593/open/tcp//ncacn_http//Microsoft Windows RPC over HTTP 1.0/, 636/open/tcp//tcpwrapped///	Ignored State: closed (995)
+# Nmap done at Fri Nov  1 14:50:03 2019 -- 1 IP address (1 host up) scanned in 89.97 seconds

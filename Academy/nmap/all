@@ -1,0 +1,20 @@
+# Nmap 7.80 scan initiated Sat Nov  7 21:18:34 2020 as: nmap -sC -sV -oN nmap/all -p- -v 10.129.34.173
+Nmap scan report for 10.129.34.173
+Host is up (0.057s latency).
+Not shown: 65532 closed ports
+PORT      STATE SERVICE VERSION
+22/tcp    open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+80/tcp    open  http    Apache httpd 2.4.41 ((Ubuntu))
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Did not follow redirect to http://academy.htb/
+33060/tcp open  mysqlx?
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port33060-TCP:V=7.80%I=7%D=11/7%Time=5FA6F363%P=x86_64-pc-linux-gnu%r(G
+SF:enericLines,9,"\x05\0\0\0\x0b\x08\x05\x1a\0");
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Nov  7 21:22:37 2020 -- 1 IP address (1 host up) scanned in 243.16 seconds

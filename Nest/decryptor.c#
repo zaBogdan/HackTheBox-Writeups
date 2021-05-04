@@ -1,0 +1,100 @@
+using System;
+using System.Text;
+using System.Security.Cryptography;
+
+public class Utils
+{
+	public static void Main(){
+		Console.WriteLine(DecryptString("test"));
+	}
+    public static string GetLogFilePath()
+    {
+        return System.IO.Path.Combine(Environment.CurrentDirectory, "Log.txt");
+    }
+
+
+
+
+    public static string DecryptString(string EncryptedString)
+    {
+        if (string.IsNullOrEmpty(EncryptedString))
+            return string.Empty;
+        else
+            return Decrypt("fTEzAfYDoz1YzkqhQkH6GQFYKp1XY5hm7bjOP86yYxE=", "N3st22", "88552299", 2, "464R5DFA5DL6LE28", 256);
+    }
+
+    public static string EncryptString(string PlainString)
+    {
+        if (string.IsNullOrEmpty(PlainString))
+            return string.Empty;
+        else
+            return Encrypt(PlainString, "N3st22", "88552299", 2, "464R5DFA5DL6LE28", 256);
+    }
+
+    public static string Encrypt(string plainText, string passPhrase, string saltValue, int passwordIterations, string initVector, int keySize)
+    {
+        byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
+        byte[] saltValueBytes = Encoding.ASCII.GetBytes(saltValue);
+        byte[] plainTextBytes = Encoding.ASCII.GetBytes(plainText);
+        Rfc2898DeriveBytes password = new Rfc2898DeriveBytes(passPhrase, saltValueBytes, passwordIterations);
+        byte[] keyBytes = password.GetBytes(System.Convert.ToInt32(keySize / (double)8));
+        AesCryptoServiceProvider symmetricKey = new AesCryptoServiceProvider();
+        symmetricKey.Mode = CipherMode.CBC;
+        ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes);
+        using (System.IO.MemoryStream memoryStream = new System.IO.MemoryStream())
+        {
+            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+            {
+                cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
+                cryptoStream.FlushFinalBlock();
+                byte[] cipherTextBytes = memoryStream.ToArray();
+                memoryStream.Close();
+                cryptoStream.Close();
+                return Convert.ToBase64String(cipherTextBytes);
+            }
+        }
+    }
+
+    public static string Decrypt(string cipherText, string passPhrase, string saltValue, int passwordIterations, string initVector, int keySize)
+    {
+        byte[] initVectorBytes;
+        initVectorBytes = Encoding.ASCII.GetBytes(initVector);
+
+        byte[] saltValueBytes;
+        saltValueBytes = Encoding.ASCII.GetBytes(saltValue);
+
+        byte[] cipherTextBytes;
+        cipherTextBytes = Convert.FromBase64String(cipherText);
+
+        Rfc2898DeriveBytes password = new Rfc2898DeriveBytes(passPhrase, saltValueBytes, passwordIterations);
+
+        byte[] keyBytes;
+        keyBytes = password.GetBytes(System.Convert.ToInt32(keySize / (double)8));
+
+        AesCryptoServiceProvider symmetricKey = new AesCryptoServiceProvider();
+        symmetricKey.Mode = CipherMode.CBC;
+
+        ICryptoTransform decryptor;
+        decryptor = symmetricKey.CreateDecryptor(keyBytes, initVectorBytes);
+
+        System.IO.MemoryStream memoryStream;
+        memoryStream = new System.IO.MemoryStream(cipherTextBytes);
+
+        CryptoStream cryptoStream;
+        cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
+
+        byte[] plainTextBytes;
+        plainTextBytes = new byte[cipherTextBytes.Length + 1];
+
+        int decryptedByteCount;
+        decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
+
+        memoryStream.Close();
+        cryptoStream.Close();
+
+        string plainText;
+        plainText = Encoding.ASCII.GetString(plainTextBytes, 0, decryptedByteCount);
+
+        return plainText;
+    }
+}

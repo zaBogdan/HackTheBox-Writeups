@@ -1,0 +1,8 @@
+Host,Priv,User
+localhost,"{""access"": 18446744073709551615, ""plugin"": ""mysql_native_password"", ""authentication_string"": ""*0A4A5CAD344718DC418035A1F4D292BA603134D8""}",root
+fidelity,"{""access"": 18446744073709551615, ""plugin"": ""mysql_native_password"", ""authentication_string"": ""*0A4A5CAD344718DC418035A1F4D292BA603134D8""}",root
+127.0.0.1,"{""access"": 18446744073709551615, ""plugin"": ""mysql_native_password"", ""authentication_string"": ""*0A4A5CAD344718DC418035A1F4D292BA603134D8""}",root
+::1,"{""access"": 18446744073709551615, ""plugin"": ""mysql_native_password"", ""authentication_string"": ""*0A4A5CAD344718DC418035A1F4D292BA603134D8""}",root
+localhost,"{""access"":512,""plugin"":""mysql_native_password"",""authentication_string"":""*CFE3EEE434B38CBF709AD67A4DCDEA476CBA7FDA"",""password_last_changed"":1571841981}",manager
+localhost,"{""access"":1073741823,""plugin"":""mysql_native_password"",""authentication_string"":""*0E178792E8FC304A2E3133D535D38CAF1DA3CD9D"",""password_last_changed"":1572599872}",hector
+

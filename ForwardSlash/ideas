@@ -1,0 +1,30 @@
+From the initial recon we get only 2 ports open 22 (SSH) and 80 (WEB). It seems it's another box based on web pentesting.
+
+Getting initial foothold.
+Acessing the ip address we get forwarded to a virtualhost, `http://forwardslash.htb/`. This site seems already compromised so we should follow the attackers path. From a brief gobuster recon, we found another file, 'note.txt' which points us to a backup website (recon located at 'recon/forwardslash.recon'). Trying a couple of endpoints, we are getting up with another virtualhost, a subdomain called `http://backup.forwardslash.htb/`. 
+Trying a couple of default credentials seems useless, so we will register a new account. This reveals 6 new endpoints, plus a folder `/dev` which was found during the recon of this website. To look over the recon access the `recon/backup.forwardslash.recon`.
+
+Working around the LFI and getting the first user.
+Navigating through the panel, we find a so called `disabled` function, the `Change your Profile Picture`. But, if we try to access the `api.php` endpoint we get a hint, that says `TODO: removed all the code to actually change the picture after backslash gang attacked us, simply echos as debug now`. Well, with this said, we now can remove the `disabled=""` tags and go with our local/remote file injection. I first tried a couple of RFI to RCE but none workedbecause this function only reads the content, doesn't actually save it. From now on, we will start an educated guessing game, based on our knowledge. 
+Things that we already know: The server is running apache, so the default path would be `/etc/apache2/sites-enabled/*.conf`, the `/var/www/html` might be default root of the webserver. Trying this things out gave us nothing new. Well, now I will try to see if we can actually find the configuration of `forwardslash.htb`. After a few trial and error guesses I got to `/etc/apache2/sites-enabled/backup.forwardslash.htb.conf` which sends us directly to the root directory `/var/www/backup.forwardslash.htb/`.
+At this stage, I saw that `file:///../../../../<path>` is blocked so I searched for another techniques. Using the php filter was the actual way to read this files. So, I downloaded `config.php` and got the `www-data` password, but it was useless. I than tried `/dev/index.php` because it seems interesting the way it was blocking us in. This actually containted some XML and FTP requests, automated, which held a set of credentials, of the user `chiv`.
+Now it seems we have a shell, as `chiv` user. Unfortunetely, we still don't have the user flag. All the burp requests are in the `burp/<file>.burp`.
+
+Lateral privesc to user pain & getting the user flag.
+I tried some basic enum scripts, but none worked. So, I tried to change the approach and use pspy. This gave me instatly something `watch -n 0.5 /usr/bin/backup`. Well this is our way in, because it runs as `pain` and it can read files with his permissions, including the user flag. But for now, the flag is not as important as the shell. In the `.ssh/` directory we can't find anything so there should be another way in. During the standard enum we actually found something, in `/var/backups` is a file called `config.php.bak`. Ok, we can see that running the backup script twice in a short amount of time we get the same md5 hash. So this is our way in.
+We can create a bash script that calls the backup, read the error code, extract the md5 hash, creates a symlink to the `/var/backups/config.php.bak` and execute again to gain access. Shellscript can be found under the names `backupCracker.sh`. Now we got a new set of credentials, this time for `pain`. The config file can be found in `files/config.bak`.
+
+Heading our way to root. 
+From the second we joined the `pain` user we knew that it was part of `backupoperator` which we saw in the recon of the first user that owns the folder `/var/backups/recovery`. In here we can find the `encrypted_backup.img` which has a huge size, 1GB. Trying to see if user has some sudo access, we end up with 3 commands: `cryptsetup, mount and unmount` but with specific things. So we will first need to find the decrypt password which was handed by chiv to pain. We have the decryption algorithm, the ciphertext and we just need the password. I wrote a python script, `crackCrypto.py` that does exactly this. After a while we hit and get the password: `cB!6%sdH8Lj^@Y*$C2cf`.
+With this we can craft our sequence to the root. At first, we need to decrypt the image, using `sudo cryptsetup luksOpen /var/backups/recovery/encrypted_backup.img backup;`. Now let's mount it into the `/mnt` directory using `sudo /bin/mount /dev/mapper/backup ./mnt/` and finally get the root's private ssh key. A huge encrypted files that contains small but precious information. Now, unmount it with `sudo /bin/umount ./mnt/` and switch the users.
+
+Rooted.
+
+Credentials:
+-> chiv:N0bodyL1kesBack/ (first user, ssh, /dex/index.php)
+-> pain:db1f73a72678e857d91e71d2963a1afa9efbabb32164cc1d94dbc704 (second user, ssh, /var/backups/config.bak)
+-> cB!6%sdH8Lj^@Y*$C2cf (encrypted_backup key)
+-> root:$6$daB3I84E$NnzV4cHTAgWsPGWoBKLO2W6NotitrAk6udeTh0cxvXWHIkDXZQtss13QP2gTgFOMdIYdQ8CtvSxzznHI.nVmW.:18326:0:99999:7::: (root's password for protected writeups)
+
+Articles:
+-> https://gist.github.com/PaulMaddox/9972046 (luksFiles) 

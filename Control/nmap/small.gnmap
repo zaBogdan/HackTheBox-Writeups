@@ -1,0 +1,4 @@
+# Nmap 7.80 scan initiated Tue Mar  3 17:38:30 2020 as: nmap -sC -sV -oA nmap/small 10.10.10.167
+Host: 10.10.10.167 ()	Status: Up
+Host: 10.10.10.167 ()	Ports: 80/open/tcp//http//Microsoft IIS httpd 10.0/, 135/open/tcp//msrpc//Microsoft Windows RPC/, 3306/open/tcp//mysql?///	Ignored State: filtered (997)
+# Nmap done at Tue Mar  3 17:38:54 2020 -- 1 IP address (1 host up) scanned in 24.75 seconds

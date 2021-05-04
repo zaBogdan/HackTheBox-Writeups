@@ -1,0 +1,4 @@
+# Nmap 7.80 scan initiated Mon Feb 24 08:52:09 2020 as: nmap -sC -sV -oA nmap/small 10.10.10.154
+Host: 10.10.10.154 ()	Status: Up
+Host: 10.10.10.154 ()	Ports: 80/open/tcp//http//Apache httpd 2.4.39 ((Win64) OpenSSL|1.1.1b PHP|7.3.4)/, 443/open/tcp//ssl|http//Apache httpd 2.4.39 ((Win64) OpenSSL|1.1.1b PHP|7.3.4)/, 445/open/tcp//microsoft-ds//Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)/, 3306/open/tcp//mysql//MariaDB (unauthorized)/	Ignored State: filtered (996)
+# Nmap done at Mon Feb 24 08:53:09 2020 -- 1 IP address (1 host up) scanned in 60.35 seconds

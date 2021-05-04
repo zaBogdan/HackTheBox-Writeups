@@ -1,0 +1,34 @@
+On the initial scan of the box we get only two ports open: 22 (SSH) and 80 (Web)
+
+
+Recon on port 80 and getting the two domains.
+At a first glance on the website we get a throwback to 90's, with a very old design. Here we have some pages, but only two stand up, placed on the right side of the navbar. First is `Author` which contains some information about Ash ( founder of cache.htb ) and developer of a HMS project, and the second one a login page, with a script linked to it, `jquery/functionality.js`. Here we get the first set of credentials. In the initial recon we got two new virtual hosts: `hms.htb` and `cache.htb` ( which seems to be the same as entering the numerical ip. )
+
+Initial foothold and getting a shell as www-data.
+If we switch to the `hms.htb` we get a new web application, named `OpenEMR`. The CVE page for this 2018 version of the app is filled with CVEs. But two stand up: the Authentificated RCE and a SQLi injection in a portal page.
+To get the SQLi working I needed to make a burp request (can be found as `portal.burp` in the directory) with a valid OpenEMR cookie, which could've been optained by registering an account to `http://hms.htb/portal/account/register.php`. Now I used the articled linked below `OpenEMR SQL Injection` which was devine when it came after 2 hours and a half of googling around this subject. The final crafter sqlmap injection is `sqlmap -l req.burp --threads=10 -D openemr -T users_secure --dump --batch -C id,username,password` with which I've recieved an usernamed with a hash.
+After almost 3 hours into this box, which almost 85% of the time was finding the attack vector, I've seen that the hash cracked in like 2-3 seconds, which meant it was in top 100 passwords from rockyou. At that point I've said it was easier to bruteforce becuase the user was disclosed in the `sql/database.sql` file (another unauthentificated vulnerability). But now we have the credentials for the RCE. 
+This seemed an approach that no one used, because I've found the web shell after 9-10 hours or so when I came to root the box. I've found another article that was talking about inserting code in a `sites/default/letter_templates/custom_pdf.php ` file using the `/interface/super/manage_site_files.php` web portal. With that said, I've uploaded the pentestmonkeyshell (shell.php, pinging on port 1234) and got www-data.
+
+From www-data to ash
+Now that we have a stable shell, we need to spawn a tty one using the `python3 reverse shell payload`. For this we will start another listener on port 1337. On this instance we can `su ash` and pass the initial password `H@v3_fun` to get the user flag.
+
+From ash to luffy. 
+Well, this will involve a slightly strech because we need to find a caching tool. The hint comes from a file in the home directory, `.viminfo`, because it related to another website, called `cybernews.htb` which doesn't exist on the box. I tried to google some thing around and I got to `memcached` after I've found it's path in a `find` session. It's located under `/usr/share/memcached` but it doesn't contain any usefull information. So I've tried to telnet ( because I know it was running localy and the port is `11211` ) after I've seen a `Pent testing on memcached server` article. Here it describes that we can `stats cachedump 1 0` and get some files back. Well, lucky me I had 5 outputs, two of them named `user` and `passwd`. The file can be found in `memcached.dump`.  Got luffy :)
+
+From luffy to root.
+Trying to understand more about this user privileges, I've ran some cmds like `sudo -l` and `id` which lead to a new discovery: I am part of docker group. Well, it's seems is a gtfobins privilege escalation. So, I've first dumped all the images using `docker images --all`. We have only one `ubuntu`. To get a shell i've used `docker run -v /:/mnt --rm -it ubuntu chroot /mnt sh`.
+
+Rooted.
+
+
+Root hash: `$6$bWa.Lbnz$k0KbMyNbdOQRcY5pWuHM2bfkF5ek8c0CTNsi00qFHmp04NqcefCsIXZTdJgqToRar5zcEk5k8KFhbIomGB3Kb/`
+
+Credentials:
+-> ash:H@v3_fun (web, user with the flag)
+-> openemr_admin:xxxxxx ($2a$05$l2sTLIG6GTBeyBf7TAKL6.ttEwJDmxs9bI6LXqlfCpEcY6VF6P0B)
+-> luffy:0n3_p1ec3 (second user)
+
+Articles:
+-> https://atha.io/post/2019/08/how-i-got-2nd-place-in-my-first-ctf-ever/
+-> https://www.hackingarticles.in/penetration-testing-on-memcached-server/

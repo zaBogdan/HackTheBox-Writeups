@@ -1,0 +1,2 @@
+rsync -a .ssh rsync://roy@[dead:beef::250:56ff:feb9:6611]:8730/home_roy
+

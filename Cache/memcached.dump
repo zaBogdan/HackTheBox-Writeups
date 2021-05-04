@@ -1,0 +1,20 @@
+ash@cache:~$ telnet 127.0.0.1 11211
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+stats cachedump 1 0
+ITEM link [21 b; 0 s]
+ITEM user [5 b; 0 s]
+ITEM passwd [9 b; 0 s]
+ITEM file [7 b; 0 s]
+ITEM account [9 b; 0 s]
+END
+get user
+VALUE user 0 5
+luffy
+END
+get passwd
+VALUE passwd 0 9
+0n3_p1ec3
+END
+

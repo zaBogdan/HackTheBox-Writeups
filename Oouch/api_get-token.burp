@@ -1,0 +1,15 @@
+POST /oauth/token/ HTTP/1.1
+
+Host: authorization.oouch.htb:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://authorization.oouch.htb:8000/oauth/authorize/?client_id=UDBtC8HhZI18nJ53kJVJpXp4IIffRhKEXZ0fSd82&response_type=code&redirect_uri=http://consumer.oouch.htb:5000/oauth/connect/token&scope=read
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 223
+Cookie: csrftoken=19PoKP51FWpdr7wVc8gN4Ufr9Wa7SgG7sfgkrgscgHNclDDV2luZ6kJ7JnzDxRb4; sessionid=g3je6doiks8rcspi81zn7vvjur3vo7nm
+Connection: close
+Upgrade-Insecure-Requests: 1
+
+grant_type=client_credentials&client_id=MrJutTaPCPR7PdFCIdDDxRbCvnUVnXdl8bv4UAbQ&client_secret=R4MNPZsX15jwj29dkGiGet9AWvIgDwqJXukdvIikSkJOfngf8AYWliFdaI4lpJFMNgZR4AQTF6kq2B9nbjtl2QTc5MNXcVIsH7YKE5CVriQUfMAMpMx0vOvZYttB2dl2

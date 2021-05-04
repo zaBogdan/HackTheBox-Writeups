@@ -1,0 +1,4 @@
+[+] dead:beef::250:56ff:feb9:802e:8730 - 9 rsync modules found: bin, boot, lib, lib64, opt, sbin, srv, usr, var
+[*] dead:beef::250:56ff:feb9:802e:8730 - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+

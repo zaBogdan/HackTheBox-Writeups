@@ -1,0 +1,27 @@
+220---------- Welcome to Pure-FTPd [privsep] [TLS] ----------
+220-You are user number 1 of 500 allowed.
+220-Local time is now 14:07. Server port: 21.
+220-This is a private system - No anonymous login
+220-IPv6 connections are also welcome on this server.
+220 You will be disconnected after 15 minutes of inactivity.
+USER QAb2VYdiJb77F9HUThtNRemWkP6uaQkg
+331 User QAb2VYdiJb77F9HUThtNRemWkP6uaQkg OK. Password required
+PASS QAb2VYdiJb77F9HUThtNRemWkP6uaQkg
+230-This server supports FXP transfers
+230-OK. Current restricted directory is /
+230-3 files used (30%) - authorized: 10 files
+230 0 Kbytes used (0%) - authorized: 1024 Kb
+EPRT |1|10.10.10.156|1234|
+200-FXP transfer: from dead:beef:2::102d%160 to 10.10.10.156
+200 PORT command successful
+EPRT |2|dead:beef:2::102d|1234|
+200-FXP transfer: from 10.10.10.156 to dead:beef:2::102d%160
+200 PORT command successful
+EPRT |1|10.10.10.156|1234|
+200-FXP transfer: from dead:beef:2::102d%160 to 10.10.10.156
+200 PORT command successful
+EPRT |2|dead:beef:2::102d|1234|
+200-FXP transfer: from 10.10.10.156 to dead:beef:2::102d%160
+200 PORT command successful
+LIST
+425 Could not open data connection to port 1234: Connection refused

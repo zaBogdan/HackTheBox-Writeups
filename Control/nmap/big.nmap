@@ -1,0 +1,25 @@
+# Nmap 7.80 scan initiated Tue Mar  3 17:38:40 2020 as: nmap -sC -sV -p- -oA nmap/big 10.10.10.167
+Nmap scan report for 10.10.10.167
+Host is up (0.051s latency).
+Not shown: 65530 filtered ports
+PORT      STATE SERVICE VERSION
+80/tcp    open  http    Microsoft IIS httpd 10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: Fidelity
+135/tcp   open  msrpc   Microsoft Windows RPC
+3306/tcp  open  mysql?
+| fingerprint-strings: 
+|   NULL: 
+|_    Host '10.10.14.47' is not allowed to connect to this MariaDB server
+49666/tcp open  msrpc   Microsoft Windows RPC
+49667/tcp open  msrpc   Microsoft Windows RPC
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port3306-TCP:V=7.80%I=7%D=3/3%Time=5E5E7A6A%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,4A,"F\0\0\x01\xffj\x04Host\x20'10\.10\.14\.47'\x20is\x20not\x20allowe
+SF:d\x20to\x20connect\x20to\x20this\x20MariaDB\x20server");
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Mar  3 17:41:25 2020 -- 1 IP address (1 host up) scanned in 164.85 seconds

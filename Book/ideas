@@ -1,0 +1,29 @@
+After both, small and big, nmap scans we got only two ports open, 22 (SSH) and 80 (WEB)
+
+Looking over the 80 port.
+First thing that comes up is the "Sign Up" button. Looking into the html code we get a script that says `Please fill name field. Should not be more than 10 characters`, so we should be trying a SQL Truncated attack. 
+Crafting the payload we get that the admin's email is `admin@book.htb` and we will guess the user being admin. The full burp request is in the file `signupadmin.request`
+Now that we have a new admin user with the same credentials, but a new password, we can login into the `/admin` and try other exploits.
+
+Being an admin user on the 80 port.
+Now looking into what we should exploit we get that into `collections.php` could be a LFI with that pdf reading the content of the files. 
+So now we should craft a payload to get all the users ( user.sequence part 1 ), than read the user.txt flag ( part 2 ) and than get the id_rsa ( part 3 )
+
+Now we got the user. ( ssh -i reader_rsa reader@10.10.10.176 )  
+
+Heading to the root
+After some enumeration, we got on pspy an interesting thing, `/usr/sbin/logrotate -f /root/log.cfg` and when we google this we get a priv esc method. So let's try to apply on our current machine. 
+Well, now we should upload the `logrotten.c` on the box, compile it using `gcc -o logrotten logrotten.c` and than run it with `./logrotten -p ./payloadfile /home/reader/backups/access.log`. [ The payload file can be found in this directory ]
+Because this is based on logs, we should simulate a change into the looging system using `echo "zaBogdan_wh0am1" > /home/reader/backups/access.log`
+Now let's fast cat the `.ssh/id_rsa` and login into the root ssh. 
+
+Pwned the box. ( ssh -i root_rsa root@10.10.10.176 ) 
+
+Flags:
+-> User: 51c1d4b5197fa30e3e5d37f8778f95bc
+-> Root: 84da92adf998a1c7231297f70dd89714
+
+Articles:
+-> https://resources.infosecinstitute.com/sql-truncation-attack/ ( SQL Attack )
+-> https://www.noob.ninja/2017/11/local-file-read-via-xss-in-dynamically.html?m=1 ( LFI over PDF )
+-> https://packetstormsecurity.com/files/154743/Logrotate-3.15.1-Privilege-Escalation.html ( Root priv esc )

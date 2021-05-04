@@ -1,0 +1,5 @@
+# Nmap 7.80 scan initiated Sat Sep 26 22:00:08 2020 as: nmap -sC -sV -oA nmap/all -p- -v 10.129.17.15
+# Ports scanned: TCP(65535;1-65535) UDP(0;) SCTP(0;) PROTOCOLS(0;)
+Host: 10.129.17.15 ()	Status: Up
+Host: 10.129.17.15 ()	Ports: 22/open/tcp//ssh//OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)/, 80/open/tcp//http//Apache httpd 2.4.41 ((Ubuntu))/, 8089/open/tcp//ssl|http//Splunkd httpd/	Ignored State: filtered (65532)
+# Nmap done at Sat Sep 26 22:04:05 2020 -- 1 IP address (1 host up) scanned in 236.62 seconds

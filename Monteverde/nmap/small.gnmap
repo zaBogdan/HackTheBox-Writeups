@@ -1,0 +1,4 @@
+# Nmap 7.80 scan initiated Sat Jan 11 21:01:10 2020 as: nmap -sC -sV -oA nmap/small 10.10.10.172
+Host: 10.10.10.172 ()	Status: Up
+Host: 10.10.10.172 ()	Ports: 53/open/tcp//domain?///, 88/open/tcp//kerberos-sec//Microsoft Windows Kerberos (server time: 2020-01-11 19:10:58Z)/, 135/open/tcp//msrpc//Microsoft Windows RPC/, 139/open/tcp//netbios-ssn//Microsoft Windows netbios-ssn/, 389/open/tcp//ldap//Microsoft Windows Active Directory LDAP (Domain: MEGABANK.LOCAL0., Site: Default-First-Site-Name)/, 445/open/tcp//microsoft-ds?///, 464/open/tcp//kpasswd5?///, 593/open/tcp//ncacn_http//Microsoft Windows RPC over HTTP 1.0/, 636/open/tcp//tcpwrapped///	Ignored State: filtered (991)
+# Nmap done at Sat Jan 11 21:05:31 2020 -- 1 IP address (1 host up) scanned in 261.02 seconds

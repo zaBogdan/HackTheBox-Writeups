@@ -1,0 +1,6 @@
+local_31 = 0x743367; //t3g
+local_2d = 0x76317250; //v1r
+local_28 = 0x746f3052743067;  //to0Rt0g
+snprintf((char *)&local_28,8,"%s%s",&local_31,&local_2d);
+
+The two binaries local_31 and local2d must be one 74336776317250 and this in ascii is t3gv1rP, but they are little endian. Reversing them we get `g3tPr1v`, the method we call to have root.

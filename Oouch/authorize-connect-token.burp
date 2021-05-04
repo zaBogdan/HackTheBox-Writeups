@@ -1,0 +1,14 @@
+POST /oauth/authorize/?client_id=UDBtC8HhZI18nJ53kJVJpXp4IIffRhKEXZ0fSd82&response_type=code&redirect_uri=http://consumer.oouch.htb:5000/oauth/connect/token&scope=read HTTP/1.1
+Host: authorization.oouch.htb:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://authorization.oouch.htb:8000/oauth/authorize/?client_id=UDBtC8HhZI18nJ53kJVJpXp4IIffRhKEXZ0fSd82&response_type=code&redirect_uri=http://consumer.oouch.htb:5000/oauth/connect/token&scope=read
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 266
+Cookie: csrftoken=19PoKP51FWpdr7wVc8gN4Ufr9Wa7SgG7sfgkrgscgHNclDDV2luZ6kJ7JnzDxRb4; sessionid=g3je6doiks8rcspi81zn7vvjur3vo7nm
+Connection: close
+Upgrade-Insecure-Requests: 1
+
+csrfmiddlewaretoken=i70dEGg407TT8Z3L1XJHcwxJMTFUqlX6yKJRbjJgAe8R4HVrtUyAzKl8IFj0FrGS&redirect_uri=http%3A%2F%2Fconsumer.oouch.htb%3A5000%2Foauth%2Fconnect%2Ftoken&scope=read&client_id=UDBtC8HhZI18nJ53kJVJpXp4IIffRhKEXZ0fSd82&state=&response_type=code&allow=Authorize

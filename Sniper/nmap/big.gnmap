@@ -1,0 +1,4 @@
+# Nmap 7.80 scan initiated Sat Dec  7 13:51:43 2019 as: nmap -sC -sV -p- -oA nmap/big 10.10.10.151
+Host: 10.10.10.151 ()	Status: Up
+Host: 10.10.10.151 ()	Ports: 80/open/tcp//http//Microsoft IIS httpd 10.0/, 135/open/tcp//msrpc//Microsoft Windows RPC/, 139/open/tcp//netbios-ssn//Microsoft Windows netbios-ssn/, 445/open/tcp//microsoft-ds?///, 49667/open/tcp//msrpc//Microsoft Windows RPC/	Ignored State: filtered (65530)
+# Nmap done at Sat Dec  7 13:55:06 2019 -- 1 IP address (1 host up) scanned in 202.89 seconds

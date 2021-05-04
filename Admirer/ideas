@@ -1,0 +1,33 @@
+On the initial recon we have three ports open: 21(FTP), 22(SSH) and 80(Web)
+
+Trying the FTP
+Look in the order they appeared, I tried to anonymous login into ftp (anonymous:anonymous) but it didn't worked. So it's useless without a set of credentials.
+
+Looking in the Web.
+I will first start a recon in the background, if I can't find an attack vector on the box. The main page is based only on image display and a non functional `Contact me` function. Well, I think we need to go back to the recon. Here it hit something interesting `robots.txt` with 200 status code. 
+
+Initial foothold.
+The content of `http://admirer.htb/robots.txt` is interesting because it points to a so called contacts and creds file. After a quick and educated guess I managed to pull one important file, `/admin-dir/credentials.txt`. Here we have a set for the FTP.
+Going back with new credentials on FTP we can successfuly login. Here we have two files, `dump.sql` and `html.tar.gz`. The SQL file doesn't seem to have any sensitive or relevant information but `html.tar.gz` has a new directory that gobuster didn't found, `utility-scripts`. I will start a new recon while looking into the files. 
+
+Information disclosure in the new directory, `utility-scripts`
+Now that we have the files source codes, we can try new Attack Vectors. The `admin_tasks.php` at a first look seems to have a php type juggling but the $_REQUESTS global variable is a string so the insecure comparison is useless. We have two new sets of credentials, one located on `utility-scripts/db_admin.php` and the other one in `index.php`. 
+We have a hit on the recon. A phpmyadmin like service, that sounds like the name of the box, `http://admirer.htb/utility-scripts/adminer.php`. The version 4.6.3 has a CVE that might be usefull. 
+To exploit this, I will setup a Roque Mysql Server (because it can access external hosts) and I will modify the script to read both , `index.php` and `utility-scripts/db_admin.php` for new set of credentials, because the other ones are outdated. To get the output we can check the `mysql.log`.
+We have a hit. In the `index.php` we have a new set of credentials, that's 100% fresh. If we try to login into SSH we get the user.
+
+Python path hijacking to get the root.
+After we have the user with his password we can try a `sudo -l` to see if he has some permissions. And he actually does, with path changing too `(ALL) SETENV: /opt/scripts/admin_tasks.sh`.
+The only task that seems exploitables is `task 6` that backups the web directory, but it calls and external python script. After reading the linked article, I managed to write a script that does this, found as `shutil.py`. I need to place it in a writable directory such as `/tmp`. Now we can run the script with sudo and PYTHONENV set and we are done, as shown: `sudo PYTHONPATH=/tmp /opt/scripts/admin_tasks.sh 6`
+
+Rooted.
+
+Root hash: $6$M5g.E5/j$AO7lZNZXLFABZld5uGh/YB3J1Va4AG9Tmw1icvm2MsDOj6B1RFloUmnA9jcj4DIsILOedBvVQg66CVjGrd.fl0
+
+Credentials:
+-> ftpuser:%n?4Wz}R$tTF7 (FTP, from web)
+-> waldo:&<h5b~yK3F#{PaPB&dA}{H> (SSH, from CVE)
+
+Articles:
+-> https://www.foregenix.com/blog/serious-vulnerability-discovered-in-adminer-tool (Adminer)
+-> https://rastating.github.io/privilege-escalation-via-python-library-hijacking/ (Python library hijacking)

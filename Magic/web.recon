@@ -1,0 +1,7 @@
+/index.php (Status: 200)
+/images (Status: 301)
+/login.php (Status: 200)
+/assets (Status: 301)
+/upload.php (Status: 302)
+/logout.php (Status: 302)
+/server-status (Status: 403)

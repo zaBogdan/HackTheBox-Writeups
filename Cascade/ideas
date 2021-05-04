@@ -1,0 +1,36 @@
+After the first nmap scan we have 445 (SMB), 139 (RPC) and 389 (LDAP) which are the most important.
+
+Checking the smb (445)
+It seems we have anonymous login allowed but nothing available in there really.
+
+Checking LDAP (389)
+Here we will use JXplorer to check. The anonymous login in here gives us more intel than smb actually. Now we mount cascade and search into UK/Users for some interesting stuff. At first we see that we have a hand of users.
+Under `Ryan Thompson` it's a filed called `cascadeLegacyPwd` with a base64 encoded password. Also, from the email address we can get the naming schema. So now we have the first set of credentials.
+
+Looking into the SMB with the new credentials (445)
+Being authentificated it seems that we have a few shares, the only one that's interesting being `Data`. Searching into it using smbmap we have an interesting file located at `Data\IT\Temp\s.smith\` called `VNC Install.reg`. Locally it can be found in `smb` folder.
+
+Decrypting the VNC password and getting the user.
+In this file we have an encrypted password, in hex. On a brief google search we get a windows tool that decrypts this password. Switch fast to the windows box and using `vncpwd.exe 6bcf2a4b6e5aca0f` we get `sT333ve2`. Being located under s.smith in the smb I guess it's hist password. So let's try to login `evil-winrm -u s.smith -p sT333ve2 -i 10.10.10.182` and we get the user flag.
+
+Back to the SMB to get new files, this time as s.smith
+I looked into the machine, but there was nothing usefull so I rechecked the smb, maybe this this I get access to new shares. And I actually did. The "Audit$" share was available now. In here there are only 3 interesting files, `CascAudit.exe` `CascCrypto.dll` and `DB\Audit.db`. Downloading them it seems that we need to decrypt a new password found in Audit.db, being for ArkSvc. Using `strings Audit.db|less` we find somewhere  `ArkSvcBQO5l5Kj9MdErXx6Q6AGOw==` and we need only the base64 encoded. For this we will switch over to windows again using dnSpy.
+We will import both `.exe` and `.dll` to get the right stuff. At first, looking in `CascAudit.exe` we see a call in the `Main` function a call to `Crypto.DecryptString(encryptedString, "c4scadek3y654321");`. Looking now in the `CascCrypto.dll` we see the `DecryptString` function that take two arguments, a base64 encrypted string and a key. Also the instantiation of the AES class it suggests the encryption algorithm. Here we have the IV key `1tdyjCbY1Ix49842`. Having all three pieces we can decrypt the password and get ArkSvc. 
+
+Working with the knew knowledge to get NT\Authority.
+We can login back into the box with the new set of credentials `evil-winrm -u arksvc -p w3lc0meFr31nd -i 10.10.10.182` and we actually see in `whoami /all` that we are part of `CASCADE\AD Recycle Bin` group. Googleing about this we actually get an article about this group that seems interesting. Here we find a cmd that we can run in the powershell `Get-ADObject -filter 'isdeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects -property *`. Here we have again another `cascadeLegacyPwd` of the TempAdmin. But this was deleted after the meeting in 2018. So I guess we it's worth a shot to try the administrator.
+
+Get the root with `evil-winrm -u Administrator -p baCT3r1aN00dles -i 10.10.10.182`
+
+The administrator hash can be found in `secretsdump` file. 
+
+Credentials:
+-> r.thompson:rY4n5eva (smb) 
+-> s.smith:sT333ve2 (user, encrypted: 6bcf2a4b6e5aca0f)
+-> arksvc:w3lc0meFr31nd (privesc user, encrypted: BQO5l5Kj9MdErXx6Q6AGOw==)
+-> TempAdmin:baCT3r1aN00dles (deleted user, encrypted: YmFDVDNyMWFOMDBkbGVz)
+-> Administrator:baCT3r1aN00dles (root)
+
+Articles:
+-> https://www.raymond.cc/blog/download/did/232/ (Decrypt VNC password)
+-> https://techcommunity.microsoft.com/t5/ask-the-directory-services-team/the-ad-recycle-bin-understanding-implementing-best-practices-and/ba-p/396944# ( The AD Recycle Bin )

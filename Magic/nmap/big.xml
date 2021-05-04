@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.80 scan initiated Sat Apr 18 22:00:41 2020 as: nmap -sC -sV -v -p- -oA nmap/big 10.10.10.185 -->
+<nmaprun scanner="nmap" args="nmap -sC -sV -v -p- -oA nmap/big 10.10.10.185" start="1587236441" startstr="Sat Apr 18 22:00:41 2020" version="7.80" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="65535" services="1-65535"/>
+<verbose level="1"/>
+<debugging level="0"/>
+<taskbegin task="NSE" time="1587236441"/>
+<taskend task="NSE" time="1587236441"/>
+<taskbegin task="NSE" time="1587236441"/>
+<taskend task="NSE" time="1587236441"/>
+<taskbegin task="NSE" time="1587236441"/>
+<taskend task="NSE" time="1587236441"/>
+<taskbegin task="Ping Scan" time="1587236441"/>
+<taskend task="Ping Scan" time="1587236441" extrainfo="1 total hosts"/>
+<taskbegin task="Parallel DNS resolution of 1 host." time="1587236441"/>
+<taskend task="Parallel DNS resolution of 1 host." time="1587236441"/>
+<taskbegin task="SYN Stealth Scan" time="1587236441"/>
+<taskprogress task="SYN Stealth Scan" time="1587236472" percent="1.87" remaining="1625" etc="1587238096"/>
+<taskprogress task="SYN Stealth Scan" time="1587236502" percent="4.09" remaining="1430" etc="1587237931"/>
+<taskprogress task="SYN Stealth Scan" time="1587236532" percent="6.31" remaining="1353" etc="1587237884"/>
+<taskprogress task="SYN Stealth Scan" time="1587236583" percent="10.00" remaining="1278" etc="1587237861"/>
+<taskprogress task="SYN Stealth Scan" time="1587236640" percent="14.16" remaining="1207" etc="1587237846"/>
+<taskprogress task="SYN Stealth Scan" time="1587236706" percent="18.95" remaining="1134" etc="1587237840"/>
+<taskprogress task="SYN Stealth Scan" time="1587236775" percent="23.92" remaining="1063" etc="1587237837"/>
+<taskprogress task="SYN Stealth Scan" time="1587236844" percent="28.92" remaining="991" etc="1587237835"/>
+<taskprogress task="SYN Stealth Scan" time="1587236913" percent="33.91" remaining="921" etc="1587237833"/>
+<taskprogress task="SYN Stealth Scan" time="1587236982" percent="38.91" remaining="850" etc="1587237832"/>
+<taskprogress task="SYN Stealth Scan" time="1587237054" percent="44.02" remaining="780" etc="1587237834"/>
+<taskprogress task="SYN Stealth Scan" time="1587237123" percent="49.01" remaining="710" etc="1587237832"/>
+<taskprogress task="SYN Stealth Scan" time="1587237195" percent="54.13" remaining="639" etc="1587237834"/>
+<taskprogress task="SYN Stealth Scan" time="1587237267" percent="59.29" remaining="568" etc="1587237834"/>
+<taskprogress task="SYN Stealth Scan" time="1587237339" percent="64.44" remaining="496" etc="1587237834"/>
+<taskprogress task="SYN Stealth Scan" time="1587237411" percent="69.59" remaining="424" etc="1587237835"/>
+<taskprogress task="SYN Stealth Scan" time="1587237483" percent="74.75" remaining="352" etc="1587237835"/>
+<taskprogress task="SYN Stealth Scan" time="1587237552" percent="79.76" remaining="283" etc="1587237834"/>
+<taskprogress task="SYN Stealth Scan" time="1587237621" percent="84.75" remaining="213" etc="1587237833"/>
+<taskprogress task="SYN Stealth Scan" time="1587237693" percent="89.98" remaining="140" etc="1587237832"/>
+<taskprogress task="SYN Stealth Scan" time="1587237765" percent="95.18" remaining="67" etc="1587237832"/>
+<taskend task="SYN Stealth Scan" time="1587237833" extrainfo="65535 total ports"/>
+<taskbegin task="Service scan" time="1587237833"/>
+<taskend task="Service scan" time="1587237839" extrainfo="2 services on 1 host"/>
+<taskbegin task="NSE" time="1587237839"/>
+<taskend task="NSE" time="1587237840"/>
+<taskbegin task="NSE" time="1587237840"/>
+<taskend task="NSE" time="1587237841"/>
+<taskbegin task="NSE" time="1587237841"/>
+<taskend task="NSE" time="1587237841"/>
+<host starttime="1587236441" endtime="1587237841"><status state="up" reason="reset" reason_ttl="63"/>
+<address addr="10.10.10.185" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><extraports state="closed" count="65533">
+<extrareasons reason="resets" count="65533"/>
+</extraports>
+<port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="ssh" product="OpenSSH" version="7.6p1 Ubuntu 4ubuntu0.3" extrainfo="Ubuntu Linux; protocol 2.0" ostype="Linux" method="probed" conf="10"><cpe>cpe:/a:openbsd:openssh:7.6p1</cpe><cpe>cpe:/o:linux:linux_kernel</cpe></service><script id="ssh-hostkey" output="&#xa;  2048 06:d4:89:bf:51:f7:fc:0c:f9:08:5e:97:63:64:8d:ca (RSA)&#xa;  256 11:a6:92:98:ce:35:40:c7:29:09:4f:6c:2d:74:aa:66 (ECDSA)&#xa;  256 71:05:99:1f:a8:1b:14:d6:03:85:53:f8:78:8e:cb:88 (ED25519)"><table>
+<elem key="key">AAAAB3NzaC1yc2EAAAADAQABAAABAQClcZO7AyXva0myXqRYz5xgxJ8ljSW1c6xX0vzHxP/Qy024qtSuDeQIRZGYsIR+kyje39aNw6HHxdz50XSBSEcauPLDWbIYLUMM+a0smh7/pRjfA+vqHxEp7e5l9H7Nbb1dzQesANxa1glKsEmKi1N8Yg0QHX0/FciFt1rdES9Y4b3I3gse2mSAfdNWn4ApnGnpy1tUbanZYdRtpvufqPWjzxUkFEnFIPrslKZoiQ+MLnp77DXfIm3PGjdhui0PBlkebTGbgo4+U44fniEweNJSkiaZW/CuKte0j/buSlBlnagzDl0meeT8EpBOPjk+F0v6Yr7heTuAZn75pO3l5RHX</elem>
+<elem key="type">ssh-rsa</elem>
+<elem key="bits">2048</elem>
+<elem key="fingerprint">06d489bf51f7fc0cf9085e9763648dca</elem>
+</table>
+<table>
+<elem key="key">AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOVyH7ButfnaTRJb0CdXzeCYFPEmm6nkSUd4d52dW6XybW9XjBanHE/FM4kZ7bJKFEOaLzF1lDizNQgiffGWWLQ=</elem>
+<elem key="type">ecdsa-sha2-nistp256</elem>
+<elem key="bits">256</elem>
+<elem key="fingerprint">11a69298ce3540c729094f6c2d74aa66</elem>
+</table>
+<table>
+<elem key="key">AAAAC3NzaC1lZDI1NTE5AAAAIE0dM4nfekm9dJWdTux9TqCyCGtW5rbmHfh/4v3NtTU1</elem>
+<elem key="type">ssh-ed25519</elem>
+<elem key="bits">256</elem>
+<elem key="fingerprint">7105991fa81b14d6038553f8788ecb88</elem>
+</table>
+</script></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="http" product="Apache httpd" version="2.4.29" extrainfo="(Ubuntu)" method="probed" conf="10"><cpe>cpe:/a:apache:http_server:2.4.29</cpe></service><script id="http-methods" output="&#xa;  Supported Methods: GET HEAD POST OPTIONS"><table key="Supported Methods">
+<elem>GET</elem>
+<elem>HEAD</elem>
+<elem>POST</elem>
+<elem>OPTIONS</elem>
+</table>
+</script><script id="http-server-header" output="Apache/2.4.29 (Ubuntu)"><elem>Apache/2.4.29 (Ubuntu)</elem>
+</script><script id="http-title" output="Magic Portfolio"><elem key="title">Magic Portfolio</elem>
+</script></port>
+</ports>
+<times srtt="54953" rttvar="8984" to="100000"/>
+</host>
+<taskbegin task="NSE" time="1587237841"/>
+<taskend task="NSE" time="1587237841"/>
+<taskbegin task="NSE" time="1587237841"/>
+<taskend task="NSE" time="1587237841"/>
+<taskbegin task="NSE" time="1587237841"/>
+<taskend task="NSE" time="1587237841"/>
+<runstats><finished time="1587237841" timestr="Sat Apr 18 22:24:01 2020" elapsed="1399.81" summary="Nmap done at Sat Apr 18 22:24:01 2020; 1 IP address (1 host up) scanned in 1399.81 seconds" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

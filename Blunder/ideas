@@ -1,0 +1,33 @@
+After an initial scan we have only 2 ports open: 22(ssh) and 80(web)
+
+Recon the web and find a lead (port 80)
+
+The only thing that we can actualy get out of this box is on the web. So I've started a recon in the background while I was looking on the site `gobuster dir -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-directories.txt -u http://10.10.10.191/ -x .php,.txt,.hml -t 40`
+It seems that we have to deal with a cms. After some time of running the recon I also get a hit on `/admin`. It's `BLUDIT`. 
+Running a searchploit against it seems we it has an Authentificated RCE, with a metasploit module available. 
+Now, we don't have a username or a password. But, the file `todo.txt` does point us to a `fergus` user. So we might try to bruteforce it.
+
+Bruteforcing the password and getting the foothold.
+After a lot of enum, I ended up at one conclusion: it's bruteforce the box. With that said, i searched for a script that can bruteforce this CMS, and I got a hit on github. I've actually needed to modify it a little and read form a wordlist.
+Let's give it a try with rockyou. After sometime, I saw that it useless, so I decided to go back to the site and grab a new wordlist. For this I've used cewl, as shown: `cewl http://10.10.10.191/ -w wordlist.txt`
+Now, after a few minutes, I got my first set of credentials: `fergus:RolandDeschain`
+I've started metasploit and used `linux/http/bludit_upload_images_exec`. Now I have a shell as www-data. 
+
+Privesc from www-data to hugo.
+Here I need to start a privesc and I will take into account that there is a new blog, `bludit-3.10.0a`. From the `/bl-content/databases/users.php` I got the second hash which cracked is `Password120`. 
+In orded to get a privesc we need tty shell, so I will upgrade to python shell. Now I just `su Hugo` and we have the user. 
+
+Pwn the box.
+Well, the root part is easy because sudo is vulnerable (as shown in the article below). THe only thing we need to do is `sudo -u#-1 /bin/bash`.
+
+Rooted.
+
+
+Credentials:
+-> fergus:RolandDeschain(rce metasploit)
+-> hugo:Password120 (user)
+-> $6$GmdDkez55tk.8Dvd$qDfa.WwHrKSBCswEaWLaSwFNCeNroew0pyxbsg8uO8a2/uq.XelP9Q/u5Cb9cBxO6hSyaVqt1lfU.3omw0ThC0
+
+Articles:
+-> https://rastating.github.io/bludit-brute-force-mitigation-bypass/
+-> https://resources.whitesourcesoftware.com/blog-whitesource/new-vulnerability-in-sudo-cve-2019-14287

@@ -1,0 +1,38 @@
+We find a bunch of ports open, among them being 80(http), 43(whois), 53(dns).
+
+Looking over the port 80 we see an odd error: VHOSTS are not configured. So let's try to see more things on the nmap.
+We find under the port 43 that if we want more infor, we must visit `http://www.supersechosting.htb`, so we add it to hosts.
+Here is a default php page, nothing to be exploited. Runing dirb we get a `/manual` thing on which the only thing that could be exploitable is that search. 
+Let's now take a look over the Database, found on the same 43 port. Let's try a SQL injection. 
+But we encounter a problem. We don't have an HTTP server to deal with. So we must create our own. To do this, we start apache2 locally and we create a basic php script that maps the parameter with a `whois -h 10.10.10.155 "<cmd>"` to get it inject. 
+Now we can run the sqlmap, listing first the Databases. We found the default and the `whois` database. Let's dump it using `sqlmap -u http://localhost/script.php?id=1 -D whois --tabels
+`
+From there we get 4 new vhosts.
+Looking at the first one, `justanotherblog` it's literally empty.
+On rentahacker we have a wordpress website with an interesting message `Check your bug tracker`. From the directory enum we get nothing so we should check the subdomains. Let's look over them `host -l rentahacker.htb 10.10.10.155`. We got 2 new subdomains.
+Now let's fire up the gobuster for `sec03.rentahacker.htb` [ gobuster dir -u http://sec03.rentahacker.htb/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php ]
+We get an interesting file, `shell.php`, taking into account that the hackers got this website. So we assume that it's a backend door. Let's try to fuzz the parameter, using wfuzz `wfuzz -u "http://sec03.rentahacker.htb/shell.php?FUZZ=whoami" -w /usr/share/wordlists/wfuzz/general/common.txt --hh 0` and we got the `hidden`
+Trying to `whoami` we get that we run as `ib01c03` so let's try to get the reverse shell. But we can't because it's full of firewalls. 
+So let's try to get some intel using this backend. 
+Search through directories we get the `/var/mail/ib01c03` with read permissions. Here there are a set of credentials for a so called `ftp.supersechosting.htb` which is the ftp protocol, because on the port 80 there is literally nothing. 
+From the FTP we get the information that is a CVE on another service, PrestaShop with version `1.7.4.4`
+Searching into that pcap file for an email/password we get an interesting and a basic request. For the basic one, [ passwd=pwnhats.htb&email=admin@pwnhats.htb ] we have no luck, but the one with a more complex password, we get the user. [ passwd=GetYouAH4t!&email=pwnhats@pwnhats.htb ]. Now we should login using the ftp into the ib01c01 username.
+
+Heading to the root.
+From the pcap file we get that we should find a rootkit file. Using the intel on the 0x00sec is a .ko file.
+After a long search on the FTP we get the path `/home/ib01c01/.../root.ko'. Now we download it using `get root.ko`
+Fire up ghidra and look into the code. we should get the `g3tpr1v` as the callable root. 
+Now get back to the backdoor and we have the shell as root. `http://sec03.rentahacker.htb/shell.php?hidden=echo "g3tPr1v" > /dev/ttyR0; id`
+Rooted.
+
+Credentials:
+-> ib01ftp:YhgRt56_Ta ( ftp )
+-> ib01c01:GetYouAH4t! ( ftp, user ) 
+
+Flags:
+-> User: 6f8a8a832ea8182fddf1da903dcc804d
+-> Root: 4a08d8174e9ec22b01d91ddb9a732b17 
+
+Articles:
+-> https://haqpl.github.io/Introducing-sqlmap-into-non-HTTP-services
+-> https://0x00sec.org/t/kernel-rootkits-getting-your-hands-dirty/1485

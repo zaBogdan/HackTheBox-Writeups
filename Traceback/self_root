@@ -1,0 +1,1 @@
+cat /tmp/update-mod.d/00-header > /etc/update-motd.d/00-header && cat /tmp/update-mod.d/10-help-text > /etc/update-motd.d/10-help-text && cat /tmp/update-mod.d/50-motd-news > /etc/update-motd.d/50-motd-news && cat /tmp/update-mod.d/80-esm > /etc/update-motd.d/80-esm && cat /tmp/update-mod.d/91-release-upgrade > /etc/update-motd.d/91-release-upgrade

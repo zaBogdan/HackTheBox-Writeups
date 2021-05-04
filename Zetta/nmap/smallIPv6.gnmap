@@ -1,0 +1,4 @@
+# Nmap 7.80 scan initiated Tue Feb 11 21:20:45 2020 as: nmap -sC -sV -6 -oA nmap/smallIPv6 dead:beef::250:56ff:feb9:802e
+Host: dead:beef::250:56ff:feb9:802e ()	Status: Up
+Host: dead:beef::250:56ff:feb9:802e ()	Ports: 21/open/tcp//ftp//Pure-FTPd/, 22/open/tcp//ssh//OpenSSH 7.9p1 Debian 10 (protocol 2.0)/, 80/open/tcp//http//nginx/	Ignored State: closed (997)
+# Nmap done at Tue Feb 11 21:21:21 2020 -- 1 IP address (1 host up) scanned in 36.27 seconds

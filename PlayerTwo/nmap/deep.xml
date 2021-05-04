@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.80 scan initiated Mon Dec 16 18:10:37 2019 as: nmap -sC -sV -p- -oA nmap/deep 10.10.10.170 -->
+<nmaprun scanner="nmap" args="nmap -sC -sV -p- -oA nmap/deep 10.10.10.170" start="1576512637" startstr="Mon Dec 16 18:10:37 2019" version="7.80" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="65535" services="1-65535"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1576512637" endtime="1576512755"><status state="up" reason="echo-reply" reason_ttl="63"/>
+<address addr="10.10.10.170" addrtype="ipv4"/>
+<hostnames>
+<hostname name="player2.htb" type="PTR"/>
+</hostnames>
+<ports><extraports state="closed" count="65532">
+<extrareasons reason="resets" count="65532"/>
+</extraports>
+<port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="ssh" product="OpenSSH" version="7.6p1 Ubuntu 4ubuntu0.3" extrainfo="Ubuntu Linux; protocol 2.0" ostype="Linux" method="probed" conf="10"><cpe>cpe:/a:openbsd:openssh:7.6p1</cpe><cpe>cpe:/o:linux:linux_kernel</cpe></service><script id="ssh-hostkey" output="&#xa;  2048 0e:7b:11:2c:5e:61:04:6b:e8:1c:bb:47:b8:4d:fe:5a (RSA)&#xa;  256 18:a0:87:56:64:06:17:56:4d:6a:8c:79:4b:61:56:90 (ECDSA)&#xa;  256 b6:4b:fc:e9:62:08:5a:60:e0:43:69:af:29:b3:27:14 (ED25519)"><table>
+<elem key="key">AAAAB3NzaC1yc2EAAAADAQABAAABAQCzMSwXPFKMIMHC6qbd9YSLz6+DZEhMFiGq0/qQf9gXW3fuTSqtrgg+HE2zbb7hwLFSSK8JSGA+7jwliX70EsW8gcEdeEzqfPXOOPFg/iN7OEm73Org/ToLr896Qb3PjuyUvx/RoWfoKgZe+x7PQfCVrYVfT+jbalfXtceFk2zyGoVpEFOy2ALBvn7ie8SfJijAP9ReJgFbM/ohPJRc0ccMMoGfiBL40r0J/Fg0dfr35ZVtu3jm0T2IN5dnMPFiKHvBH9Qmn05pT05TWvvGsWt5ixOucqQZ9XJ/vSl6uc3Pia8/R3JjcvRPhWeL7MW0LJqMwLTD0rI8BgiRd/e+7Ge7</elem>
+<elem key="bits">2048</elem>
+<elem key="fingerprint">0e7b112c5e61046be81cbb47b84dfe5a</elem>
+<elem key="type">ssh-rsa</elem>
+</table>
+<table>
+<elem key="key">AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMeoH2R88KLK8h6lK4s/mSTG1XSfdnTUg3IpD0cdYCVWqCfp78nEiSYVHzryrxkXt4uhwdw6t2qCIlvzME1/Bcc=</elem>
+<elem key="bits">256</elem>
+<elem key="fingerprint">18a08756640617564d6a8c794b615690</elem>
+<elem key="type">ecdsa-sha2-nistp256</elem>
+</table>
+<table>
+<elem key="key">AAAAC3NzaC1lZDI1NTE5AAAAIEGgQjJ7yJMCuZh2i4dFx9df2iLkqVmatqSf5CMPtVK/</elem>
+<elem key="bits">256</elem>
+<elem key="fingerprint">b64bfce962085a60e04369af29b32714</elem>
+<elem key="type">ssh-ed25519</elem>
+</table>
+</script></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="http" product="Apache httpd" version="2.4.29" extrainfo="(Ubuntu)" method="probed" conf="10"><cpe>cpe:/a:apache:http_server:2.4.29</cpe></service><script id="http-server-header" output="Apache/2.4.29 (Ubuntu)"><elem>Apache/2.4.29 (Ubuntu)</elem>
+</script><script id="http-title" output="Player2 | Home"><elem key="title">Player2 | Home</elem>
+</script></port>
+<port protocol="tcp" portid="8545"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="http" extrainfo="PHP 7.2.24-0ubuntu0.18.04.1" servicefp="SF-Port8545-TCP:V=7.80%I=7%D=12/16%Time=5DF7ACE6%P=x86_64-pc-linux-gnu%r(GetRequest,FC,&quot;HTTP/1\.1\x20404\x20Not\x20Found\r\nDate:\x20Mon,\x2016\x20Dec\x202019\x2016:12:24\x20GMT\r\nConnection:\x20close\r\nX-Powered-By:\x20PHP/7\.2\.24-0ubuntu0\.18\.04\.1\r\nContent-Type:\x20application/json\r\n\r\n{\&quot;code\&quot;:\&quot;bad_route\&quot;,\&quot;msg\&quot;:\&quot;no\x20handler\x20for\x20path\x20\\\&quot;\\/\\\&quot;\&quot;,\&quot;meta\&quot;:{\&quot;twirp_invalid_route\&quot;:\&quot;GET\x20\\/\&quot;}}&quot;)%r(HTTPOptions,100,&quot;HTTP/1\.1\x20404\x20Not\x20Found\r\nDate:\x20Mon,\x2016\x20Dec\x202019\x2016:12:24\x20GMT\r\nConnection:\x20close\r\nX-Powered-By:\x20PHP/7\.2\.24-0ubuntu0\.18\.04\.1\r\nContent-Type:\x20application/json\r\n\r\n{\&quot;code\&quot;:\&quot;bad_route\&quot;,\&quot;msg\&quot;:\&quot;no\x20handler\x20for\x20path\x20\\\&quot;\\/\\\&quot;\&quot;,\&quot;meta\&quot;:{\&quot;twirp_invalid_route\&quot;:\&quot;OPTIONS\x20\\/\&quot;}}&quot;)%r(FourOhFourRequest,144,&quot;HTTP/1\.1\x20404\x20Not\x20Found\r\nDate:\x20Mon,\x2016\x20Dec\x202019\x2016:12:33\x20GMT\r\nConnection:\x20close\r\nX-Powered-By:\x20PHP/7\.2\.24-0ubuntu0\.18\.04\.1\r\nContent-Type:\x20application/json\r\n\r\n{\&quot;code\&quot;:\&quot;bad_route\&quot;,\&quot;msg\&quot;:\&quot;no\x20handler\x20for\x20path\x20\\\&quot;\\/nice%20ports%2C\\/Tri%6Eity\.txt%2ebak\\\&quot;\&quot;,\&quot;meta\&quot;:{\&quot;twirp_invalid_route\&quot;:\&quot;GET\x20\\/nice%20ports%2C\\/Tri%6Eity\.txt%2ebak\&quot;}}&quot;)%r(OfficeScan,FC,&quot;HTTP/1\.1\x20404\x20Not\x20Found\r\nDate:\x20Mon,\x2016\x20Dec\x202019\x2016:12:33\x20GMT\r\nConnection:\x20close\r\nX-Powered-By:\x20PHP/7\.2\.24-0ubuntu0\.18\.04\.1\r\nContent-Type:\x20application/json\r\n\r\n{\&quot;code\&quot;:\&quot;bad_route\&quot;,\&quot;msg\&quot;:\&quot;no\x20handler\x20for\x20path\x20\\\&quot;\\/\\\&quot;\&quot;,\&quot;meta\&quot;:{\&quot;twirp_invalid_route\&quot;:\&quot;GET\x20\\/\&quot;}}&quot;);" method="probed" conf="10"><cpe>cpe:/a:php:php:7.2.24-0ubuntu0.18.04.1</cpe></service><script id="fingerprint-strings" output="&#xa;  FourOhFourRequest: &#xa;    HTTP/1.1 404 Not Found&#xa;    Date: Mon, 16 Dec 2019 16:12:33 GMT&#xa;    Connection: close&#xa;    X-Powered-By: PHP/7.2.24-0ubuntu0.18.04.1&#xa;    Content-Type: application/json&#xa;    {&quot;code&quot;:&quot;bad_route&quot;,&quot;msg&quot;:&quot;no handler for path &quot;/nice%20ports%2C/Tri%6Eity.txt%2ebak&quot;&quot;,&quot;meta&quot;:{&quot;twirp_invalid_route&quot;:&quot;GET /nice%20ports%2C/Tri%6Eity.txt%2ebak&quot;}}&#xa;  GetRequest: &#xa;    HTTP/1.1 404 Not Found&#xa;    Date: Mon, 16 Dec 2019 16:12:24 GMT&#xa;    Connection: close&#xa;    X-Powered-By: PHP/7.2.24-0ubuntu0.18.04.1&#xa;    Content-Type: application/json&#xa;    {&quot;code&quot;:&quot;bad_route&quot;,&quot;msg&quot;:&quot;no handler for path &quot;/&quot;&quot;,&quot;meta&quot;:{&quot;twirp_invalid_route&quot;:&quot;GET /&quot;}}&#xa;  HTTPOptions: &#xa;    HTTP/1.1 404 Not Found&#xa;    Date: Mon, 16 Dec 2019 16:12:24 GMT&#xa;    Connection: close&#xa;    X-Powered-By: PHP/7.2.24-0ubuntu0.18.04.1&#xa;    Content-Type: application/json&#xa;    {&quot;code&quot;:&quot;bad_route&quot;,&quot;msg&quot;:&quot;no handler for path &quot;/&quot;&quot;,&quot;meta&quot;:{&quot;twirp_invalid_route&quot;:&quot;OPTIONS /&quot;}}&#xa;  OfficeScan: &#xa;    HTTP/1.1 404 Not Found&#xa;    Date: Mon, 16 Dec 2019 16:12:33 GMT&#xa;    Connection: close&#xa;    X-Powered-By: PHP/7.2.24-0ubuntu0.18.04.1&#xa;    Content-Type: application/json&#xa;    {&quot;code&quot;:&quot;bad_route&quot;,&quot;msg&quot;:&quot;no handler for path &quot;/&quot;&quot;,&quot;meta&quot;:{&quot;twirp_invalid_route&quot;:&quot;GET /&quot;}}"><elem key="FourOhFourRequest">&#xa;    HTTP/1.1 404 Not Found&#xa;    Date: Mon, 16 Dec 2019 16:12:33 GMT&#xa;    Connection: close&#xa;    X-Powered-By: PHP/7.2.24-0ubuntu0.18.04.1&#xa;    Content-Type: application/json&#xa;    {&quot;code&quot;:&quot;bad_route&quot;,&quot;msg&quot;:&quot;no handler for path &quot;/nice%20ports%2C/Tri%6Eity.txt%2ebak&quot;&quot;,&quot;meta&quot;:{&quot;twirp_invalid_route&quot;:&quot;GET /nice%20ports%2C/Tri%6Eity.txt%2ebak&quot;}}</elem>
+<elem key="GetRequest">&#xa;    HTTP/1.1 404 Not Found&#xa;    Date: Mon, 16 Dec 2019 16:12:24 GMT&#xa;    Connection: close&#xa;    X-Powered-By: PHP/7.2.24-0ubuntu0.18.04.1&#xa;    Content-Type: application/json&#xa;    {&quot;code&quot;:&quot;bad_route&quot;,&quot;msg&quot;:&quot;no handler for path &quot;/&quot;&quot;,&quot;meta&quot;:{&quot;twirp_invalid_route&quot;:&quot;GET /&quot;}}</elem>
+<elem key="HTTPOptions">&#xa;    HTTP/1.1 404 Not Found&#xa;    Date: Mon, 16 Dec 2019 16:12:24 GMT&#xa;    Connection: close&#xa;    X-Powered-By: PHP/7.2.24-0ubuntu0.18.04.1&#xa;    Content-Type: application/json&#xa;    {&quot;code&quot;:&quot;bad_route&quot;,&quot;msg&quot;:&quot;no handler for path &quot;/&quot;&quot;,&quot;meta&quot;:{&quot;twirp_invalid_route&quot;:&quot;OPTIONS /&quot;}}</elem>
+<elem key="OfficeScan">&#xa;    HTTP/1.1 404 Not Found&#xa;    Date: Mon, 16 Dec 2019 16:12:33 GMT&#xa;    Connection: close&#xa;    X-Powered-By: PHP/7.2.24-0ubuntu0.18.04.1&#xa;    Content-Type: application/json&#xa;    {&quot;code&quot;:&quot;bad_route&quot;,&quot;msg&quot;:&quot;no handler for path &quot;/&quot;&quot;,&quot;meta&quot;:{&quot;twirp_invalid_route&quot;:&quot;GET /&quot;}}</elem>
+</script><script id="http-title" output="Site doesn&apos;t have a title (application/json)."></script></port>
+</ports>
+<times srtt="53149" rttvar="657" to="100000"/>
+</host>
+<runstats><finished time="1576512755" timestr="Mon Dec 16 18:12:35 2019" elapsed="118.19" summary="Nmap done at Mon Dec 16 18:12:35 2019; 1 IP address (1 host up) scanned in 118.19 seconds" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

@@ -1,0 +1,34 @@
+Author: root <root@zetta.htb>
+Date:   Sat Jul 27 05:51:43 2019 -0400
+
+    Adding/adapting template from manual.
+
+diff --git a/pgsql.conf b/pgsql.conf
+index f31836d..9649f68 100644
+--- a/pgsql.conf
++++ b/pgsql.conf
+@@ -1,5 +1,22 @@
+ ### Configuration file for rsyslog-pgsql
+ ### Changes are preserved
+ 
+-module (load="ompgsql")
+-*.* action(type="ompgsql" server="localhost" db="Syslog" uid="rsyslog" pwd="")
++# https://www.rsyslog.com/doc/v8-stable/configuration/modules/ompgsql.html
++#
++# Used default template from documentation/source but adapted table
++# name to syslog_lines so the Ruby on Rails application Maurice is
++# coding can use this as SyslogLine object.
++#
++template(name="sql-syslog" type="list" option.sql="on") {
++  constant(value="INSERT INTO syslog_lines (message, devicereportedtime) values ('")
++  property(name="msg")
++  constant(value="','")
++  property(name="timereported" dateformat="pgsql" date.inUTC="on")
++  constant(value="')")
++}
++
++# load module
++module(load="ompgsql")
++
++# Only forward local7.info for testing.
++local7.info action(type="ompgsql" server="localhost" user="postgres" pass="test1234" db="syslog" template="sql-syslog")

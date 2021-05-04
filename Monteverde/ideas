@@ -1,0 +1,22 @@
+So we have some ports open but we don't know what to use
+First, we will run enum4linux and get a bunch of users. With them we try weak passwords, if we get any luck with those [ crackmapexec -u user -p user --shares 10.10.10.172 ]. And we find a match on the user SABatchJobs.
+With this one we login on smb, `./smbclient.py SABatchJobs:SABatchJobs@10.10.10.172` with which we search into shares. On the `users$` we have access and here is an azure.xml file that contains the magical password for our user. 
+Now we got the user, mhope! `evil-winrm -u mhope -p 4n0therD4y@n0th3r$ -i 10.10.10.172`
+
+Heading to the root.
+Now we see that this server is running Azure. Let's try to find an exploit that uses the this. `Azure AD Connect`
+The script must be edited, the way you connect to the database.
+Now upload it and run it, you got the administrator credentials.
+Rooted. `evil-winrm -u administrator -p d0m@in4dminyeah! -i 10.10.10.172`
+
+Users:
+-> SABatchJobs:SABatchJobs
+-> mhope:4n0therD4y@n0th3r$
+-> administrator:d0m@in4dminyeah!
+
+Flags:
+-> User: 4961976bd7d8f4eeb2ce3705e2f212f2
+-> Root: 12909612d25c8dcf6e5a07d1a804a0bc
+
+Articles:
+-> https://blog.xpnsec.com/azuread-connect-for-redteam/

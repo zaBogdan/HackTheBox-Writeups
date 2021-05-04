@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.80 scan initiated Sat Sep 26 22:00:08 2020 as: nmap -sC -sV -oA nmap/all -p- -v 10.129.17.15 -->
+<nmaprun scanner="nmap" args="nmap -sC -sV -oA nmap/all -p- -v 10.129.17.15" start="1601146808" startstr="Sat Sep 26 22:00:08 2020" version="7.80" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="65535" services="1-65535"/>
+<verbose level="1"/>
+<debugging level="0"/>
+<taskbegin task="NSE" time="1601146808"/>
+<taskend task="NSE" time="1601146808"/>
+<taskbegin task="NSE" time="1601146808"/>
+<taskend task="NSE" time="1601146808"/>
+<taskbegin task="NSE" time="1601146808"/>
+<taskend task="NSE" time="1601146808"/>
+<taskbegin task="Ping Scan" time="1601146808"/>
+<taskend task="Ping Scan" time="1601146808" extrainfo="1 total hosts"/>
+<taskbegin task="Parallel DNS resolution of 1 host." time="1601146808"/>
+<taskend task="Parallel DNS resolution of 1 host." time="1601146821"/>
+<taskbegin task="SYN Stealth Scan" time="1601146821"/>
+<taskprogress task="SYN Stealth Scan" time="1601146852" percent="13.74" remaining="195" etc="1601147047"/>
+<taskprogress task="SYN Stealth Scan" time="1601146882" percent="32.52" remaining="127" etc="1601147009"/>
+<taskprogress task="SYN Stealth Scan" time="1601146912" percent="52.13" remaining="84" etc="1601146996"/>
+<taskprogress task="SYN Stealth Scan" time="1601146942" percent="64.26" remaining="68" etc="1601147009"/>
+<taskprogress task="SYN Stealth Scan" time="1601146972" percent="79.32" remaining="40" etc="1601147011"/>
+<taskend task="SYN Stealth Scan" time="1601147000" extrainfo="65535 total ports"/>
+<taskbegin task="Service scan" time="1601147000"/>
+<taskend task="Service scan" time="1601147033" extrainfo="3 services on 1 host"/>
+<taskbegin task="NSE" time="1601147033"/>
+<taskend task="NSE" time="1601147042"/>
+<taskbegin task="NSE" time="1601147042"/>
+<taskend task="NSE" time="1601147045"/>
+<taskbegin task="NSE" time="1601147045"/>
+<taskend task="NSE" time="1601147045"/>
+<host starttime="1601146808" endtime="1601147045"><status state="up" reason="reset" reason_ttl="63"/>
+<address addr="10.129.17.15" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><extraports state="filtered" count="65532">
+<extrareasons reason="no-responses" count="65532"/>
+</extraports>
+<port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="ssh" product="OpenSSH" version="8.2p1 Ubuntu 4ubuntu0.1" extrainfo="Ubuntu Linux; protocol 2.0" ostype="Linux" method="probed" conf="10"><cpe>cpe:/a:openbsd:openssh:8.2p1</cpe><cpe>cpe:/o:linux:linux_kernel</cpe></service></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="http" product="Apache httpd" version="2.4.41" extrainfo="(Ubuntu)" method="probed" conf="10"><cpe>cpe:/a:apache:http_server:2.4.41</cpe></service><script id="http-methods" output="&#xa;  Supported Methods: POST OPTIONS HEAD GET"><table key="Supported Methods">
+<elem>POST</elem>
+<elem>OPTIONS</elem>
+<elem>HEAD</elem>
+<elem>GET</elem>
+</table>
+</script><script id="http-server-header" output="Apache/2.4.41 (Ubuntu)"><elem>Apache/2.4.41 (Ubuntu)</elem>
+</script><script id="http-title" output="Doctor"><elem key="title">Doctor</elem>
+</script></port>
+<port protocol="tcp" portid="8089"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="http" product="Splunkd httpd" tunnel="ssl" method="probed" conf="10"><cpe>cpe:/a:splunk:splunk</cpe></service><script id="http-methods" output="&#xa;  Supported Methods: GET HEAD OPTIONS"><table key="Supported Methods">
+<elem>GET</elem>
+<elem>HEAD</elem>
+<elem>OPTIONS</elem>
+</table>
+</script><script id="http-robots.txt" output="1 disallowed entry &#xa;/"/><script id="http-server-header" output="Splunkd"><elem>Splunkd</elem>
+</script><script id="http-title" output="splunkd"><elem key="title">splunkd</elem>
+</script><script id="ssl-cert" output="Subject: commonName=SplunkServerDefaultCert/organizationName=SplunkUser&#xa;Issuer: commonName=SplunkCommonCA/organizationName=Splunk/stateOrProvinceName=CA/countryName=US&#xa;Public Key type: rsa&#xa;Public Key bits: 2048&#xa;Signature Algorithm: sha256WithRSAEncryption&#xa;Not valid before: 2020-09-06T15:57:27&#xa;Not valid after:  2023-09-06T15:57:27&#xa;MD5:   db23 4e5c 546d 8895 0f5f 8f42 5e90 6787&#xa;SHA-1: 7ec9 1bb7 343f f7f6 bdd7 d015 d720 6f6f 19e2 098b"><table key="subject">
+<elem key="commonName">SplunkServerDefaultCert</elem>
+<elem key="organizationName">SplunkUser</elem>
+</table>
+<table key="issuer">
+<elem key="stateOrProvinceName">CA</elem>
+<elem key="localityName">San Francisco</elem>
+<elem key="organizationName">Splunk</elem>
+<elem key="commonName">SplunkCommonCA</elem>
+<elem key="emailAddress">support@splunk.com</elem>
+<elem key="countryName">US</elem>
+</table>
+<table key="pubkey">
+<elem key="modulus">userdata: 0x564b1c8919d8</elem>
+<elem key="exponent">userdata: 0x564b1d531588</elem>
+<elem key="bits">2048</elem>
+<elem key="type">rsa</elem>
+</table>
+<elem key="sig_algo">sha256WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notBefore">2020-09-06T15:57:27</elem>
+<elem key="notAfter">2023-09-06T15:57:27</elem>
+</table>
+<elem key="md5">db234e5c546d88950f5f8f425e906787</elem>
+<elem key="sha1">7ec91bb7343ff7f6bdd7d015d7206f6f19e2098b</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIDMjCCAhoCCQC3IKogA4zEAzANBgkqhkiG9w0BAQsFADB/MQswCQYDVQQGEwJV&#xa;UzELMAkGA1UECAwCQ0ExFjAUBgNVBAcMDVNhbiBGcmFuY2lzY28xDzANBgNVBAoM&#xa;BlNwbHVuazEXMBUGA1UEAwwOU3BsdW5rQ29tbW9uQ0ExITAfBgkqhkiG9w0BCQEW&#xa;EnN1cHBvcnRAc3BsdW5rLmNvbTAeFw0yMDA5MDYxNTU3MjdaFw0yMzA5MDYxNTU3&#xa;MjdaMDcxIDAeBgNVBAMMF1NwbHVua1NlcnZlckRlZmF1bHRDZXJ0MRMwEQYDVQQK&#xa;DApTcGx1bmtVc2VyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0JgJ&#xa;NKrC4SrGzEhhyluUIcBW+eD6y+4paEikip5bzO7Xz8+tVJmFBcDfZdkL3TIZFTCF&#xa;95BMqL4If1SNZlFQxpMZB/9PzCMm0HmhEK/FlHfdrLwaeK71SWeO/MMNtsAheIPA&#xa;pNByri9icp2S9u7wg89g9uHK4ION8uTJMxbmtCRT4jgRcenOZYghvsTEMLPhwlb2&#xa;M/59WRopfyakIEl/w/zF1jCfnrT6XfZtTos6ueet6lhjd8g5WW9ZJIfmjYDaqHPg&#xa;Tg3yLCRjYhLk+2vLyrO23l5kk8H+H4JgIOCqhAw38hC0r+KETsuWCGIxl4rBBDQw&#xa;E5TvP75NsGW2O3JNDQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQBJjjx+KHFwYJei&#xa;lMJlmXBOEs7V1KiAjCenWd0Bz49Bkbik/5Rcia9k44zhANE7pJWNN6gpGJBn7b7D&#xa;rliSOwvVoBICHtWFuQls8bRbMn5Kfdd9G7tGEkKGdvn3jOFkQFSQQQ56Uzh7Lezj&#xa;hjtQ1p1Sg2Vq3lJm70ziOlRa0i/Lk7Ydc3xJ478cjB9nlb15jXmSdZcrCqgsAjBz&#xa;IIDPzC+f7hJYlnFau2OA5uWPX/HIR7JfQsKXWCM6Tx0b9tZKgNNOr+DwyML4CH6o&#xa;qrryh7elUJojAaZ0wYNd5koGZzEH4ymAQoshgFyEgetm1BbzMbA3PfZkX1VR6AV+&#xa;guO5oa9R&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script></port>
+</ports>
+<times srtt="57786" rttvar="5183" to="100000"/>
+</host>
+<taskbegin task="NSE" time="1601147045"/>
+<taskend task="NSE" time="1601147045"/>
+<taskbegin task="NSE" time="1601147045"/>
+<taskend task="NSE" time="1601147045"/>
+<taskbegin task="NSE" time="1601147045"/>
+<taskend task="NSE" time="1601147045"/>
+<runstats><finished time="1601147045" timestr="Sat Sep 26 22:04:05 2020" elapsed="236.62" summary="Nmap done at Sat Sep 26 22:04:05 2020; 1 IP address (1 host up) scanned in 236.62 seconds" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

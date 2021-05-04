@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.80 scan initiated Mon Feb 24 08:52:21 2020 as: nmap -sC -sV -p- -oA nmap/big 10.10.10.154 -->
+<nmaprun scanner="nmap" args="nmap -sC -sV -p- -oA nmap/big 10.10.10.154" start="1582527141" startstr="Mon Feb 24 08:52:21 2020" version="7.80" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="65535" services="1-65535"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1582527142" endtime="1582527439"><status state="up" reason="echo-reply" reason_ttl="127"/>
+<address addr="10.10.10.154" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><extraports state="filtered" count="65531">
+<extrareasons reason="no-responses" count="65531"/>
+</extraports>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="127"/><service name="http" product="Apache httpd" version="2.4.39" extrainfo="(Win64) OpenSSL/1.1.1b PHP/7.3.4" method="probed" conf="10"><cpe>cpe:/a:apache:http_server:2.4.39</cpe></service><script id="http-server-header" output="Apache/2.4.39 (Win64) OpenSSL/1.1.1b PHP/7.3.4"><elem>Apache/2.4.39 (Win64) OpenSSL/1.1.1b PHP/7.3.4</elem>
+</script><script id="http-title" output="E-coin"><elem key="title">E-coin</elem>
+</script></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="127"/><service name="http" product="Apache httpd" version="2.4.39" extrainfo="(Win64) OpenSSL/1.1.1b PHP/7.3.4" tunnel="ssl" method="probed" conf="10"><cpe>cpe:/a:apache:http_server:2.4.39</cpe></service><script id="http-server-header" output="Apache/2.4.39 (Win64) OpenSSL/1.1.1b PHP/7.3.4"><elem>Apache/2.4.39 (Win64) OpenSSL/1.1.1b PHP/7.3.4</elem>
+</script><script id="http-title" output="E-coin"><elem key="title">E-coin</elem>
+</script><script id="ssl-cert" output="Subject: commonName=localhost&#xa;Not valid before: 2009-11-10T23:48:47&#xa;Not valid after:  2019-11-08T23:48:47"><table key="subject">
+<elem key="commonName">localhost</elem>
+</table>
+<table key="issuer">
+<elem key="commonName">localhost</elem>
+</table>
+<table key="pubkey">
+<elem key="bits">1024</elem>
+<elem key="modulus">userdata: 0x5592db703638</elem>
+<elem key="exponent">userdata: 0x5592db7035f8</elem>
+<elem key="type">rsa</elem>
+</table>
+<elem key="sig_algo">sha1WithRSAEncryption</elem>
+<table key="validity">
+<elem key="notAfter">2019-11-08T23:48:47</elem>
+<elem key="notBefore">2009-11-10T23:48:47</elem>
+</table>
+<elem key="md5">a0a44cc99e84b26f9e639f9ed229dee0</elem>
+<elem key="sha1">b0238c547a905bfa119c4e8baccaeacf36491ff6</elem>
+<elem key="pem">-&#45;&#45;&#45;&#45;BEGIN CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;MIIBnzCCAQgCCQC1x1LJh4G1AzANBgkqhkiG9w0BAQUFADAUMRIwEAYDVQQDEwls&#xa;b2NhbGhvc3QwHhcNMDkxMTEwMjM0ODQ3WhcNMTkxMTA4MjM0ODQ3WjAUMRIwEAYD&#xa;VQQDEwlsb2NhbGhvc3QwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMEl0yfj&#xa;7K0Ng2pt51+adRAj4pCdoGOVjx1BmljVnGOMW3OGkHnMw9ajibh1vB6UfHxu463o&#xa;J1wLxgxq+Q8y/rPEehAjBCspKNSq+bMvZhD4p8HNYMRrKFfjZzv3ns1IItw46kgT&#xa;gDpAl1cMRzVGPXFimu5TnWMOZ3ooyaQ0/xntAgMBAAEwDQYJKoZIhvcNAQEFBQAD&#xa;gYEAavHzSWz5umhfb/MnBMa5DL2VNzS+9whmmpsDGEG+uR0kM1W2GQIdVHHJTyFd&#xa;aHXzgVJBQcWTwhp84nvHSiQTDBSaT6cQNQpvag/TaED/SEQpm0VqDFwpfFYuufBL&#xa;vVNbLkKxbK2XwUvu0RxoLdBMC/89HqrZ0ppiONuQ+X2MtxE=&#xa;-&#45;&#45;&#45;&#45;END CERTIFICATE-&#45;&#45;&#45;&#45;&#xa;</elem>
+</script><script id="ssl-date" output="TLS randomness does not represent time"></script><script id="tls-alpn" output="&#xa;  http/1.1"><elem>http/1.1</elem>
+</script></port>
+<port protocol="tcp" portid="445"><state state="open" reason="syn-ack" reason_ttl="127"/><service name="microsoft-ds" product="Microsoft Windows 7 - 10 microsoft-ds" extrainfo="workgroup: WORKGROUP" hostname="BANKROBBER" ostype="Windows" method="probed" conf="10"><cpe>cpe:/o:microsoft:windows</cpe></service></port>
+<port protocol="tcp" portid="3306"><state state="open" reason="syn-ack" reason_ttl="127"/><service name="mysql" product="MariaDB" extrainfo="unauthorized" method="probed" conf="10"><cpe>cpe:/a:mariadb:mariadb</cpe></service></port>
+</ports>
+<hostscript><script id="clock-skew" output="mean: 1h00m01s, deviation: 0s, median: 1h00m01s"><elem key="count">2</elem>
+<elem key="median">3601</elem>
+<elem key="stddev">0</elem>
+<elem key="mean">3601</elem>
+</script><script id="smb-os-discovery" output="ERROR: Script execution failed (use -d to debug)"/><script id="smb-security-mode" output="&#xa;  account_used: guest&#xa;  authentication_level: user&#xa;  challenge_response: supported&#xa;  message_signing: disabled (dangerous, but default)"><elem key="account_used">guest</elem>
+<elem key="authentication_level">user</elem>
+<elem key="challenge_response">supported</elem>
+<elem key="message_signing">disabled</elem>
+</script><script id="smb2-security-mode" output="&#xa;  2.02: &#xa;    Message signing enabled but not required"><table key="2.02">
+<elem>Message signing enabled but not required</elem>
+</table>
+</script><script id="smb2-time" output="&#xa;  date: 2020-02-24T07:56:44&#xa;  start_date: 2020-02-24T07:51:01"><elem key="date">2020-02-24T07:56:44</elem>
+<elem key="start_date">2020-02-24T07:51:01</elem>
+</script></hostscript><times srtt="60657" rttvar="460" to="100000"/>
+</host>
+<runstats><finished time="1582527439" timestr="Mon Feb 24 08:57:19 2020" elapsed="298.03" summary="Nmap done at Mon Feb 24 08:57:19 2020; 1 IP address (1 host up) scanned in 298.03 seconds" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

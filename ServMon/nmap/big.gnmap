@@ -1,0 +1,2 @@
+# Nmap 7.80 scan initiated Sat Apr 11 22:00:42 2020 as: nmap -sC -sV -p- -v -oA nmap/big 10.10.10.184
+# Ports scanned: TCP(65535;1-65535) UDP(0;) SCTP(0;) PROTOCOLS(0;)

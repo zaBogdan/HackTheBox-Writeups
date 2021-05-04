@@ -1,0 +1,1 @@
+# Nmap 7.80 scan initiated Mon Sep 21 12:23:05 2020 as: nmap -sU -sV -v -p- -oN nmap/udp 10.129.16.50

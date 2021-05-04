@@ -1,0 +1,3 @@
+/usr/share/doc/mosquitto/examples/mosquitto.conf.example
+/var/lib/mosquitto/
+/var/log/mosquitto/mosquitto.log

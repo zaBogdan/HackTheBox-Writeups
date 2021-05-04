@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.80 scan initiated Sat Apr 11 22:00:42 2020 as: nmap -sC -sV -p- -v -oA nmap/big 10.10.10.184 -->
+<nmaprun scanner="nmap" args="nmap -sC -sV -p- -v -oA nmap/big 10.10.10.184" start="1586631642" startstr="Sat Apr 11 22:00:42 2020" version="7.80" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="65535" services="1-65535"/>
+<verbose level="1"/>
+<debugging level="0"/>
+<taskbegin task="NSE" time="1586631644"/>
+<taskend task="NSE" time="1586631644"/>
+<taskbegin task="NSE" time="1586631644"/>
+<taskend task="NSE" time="1586631644"/>
+<taskbegin task="NSE" time="1586631644"/>
+<taskend task="NSE" time="1586631644"/>
+<taskbegin task="Ping Scan" time="1586631644"/>
+<taskend task="Ping Scan" time="1586631645" extrainfo="1 total hosts"/>
+<taskbegin task="Parallel DNS resolution of 1 host." time="1586631645"/>
+<taskend task="Parallel DNS resolution of 1 host." time="1586631645"/>
+<taskbegin task="SYN Stealth Scan" time="1586631645"/>
+<taskprogress task="SYN Stealth Scan" time="1586631676" percent="0.36"/>
+<taskprogress task="SYN Stealth Scan" time="1586631706" percent="0.40"/>
+<taskprogress task="SYN Stealth Scan" time="1586631736" percent="0.46"/>
+<taskprogress task="SYN Stealth Scan" time="1586631766" percent="0.57"/>
+<taskprogress task="SYN Stealth Scan" time="1586631796" percent="0.67"/>
+<taskprogress task="SYN Stealth Scan" time="1586631826" percent="0.80"/>
+<taskprogress task="SYN Stealth Scan" time="1586631856" percent="0.94"/>
+<taskprogress task="SYN Stealth Scan" time="1586631886" percent="1.07" remaining="22201" etc="1586654087"/>
+<taskprogress task="SYN Stealth Scan" time="1586632360" percent="3.28" remaining="21073" etc="1586653432"/>
+<taskprogress task="SYN Stealth Scan" time="1586633359" percent="7.90" remaining="19981" etc="1586653340"/>
+<taskprogress task="SYN Stealth Scan" time="1586634286" percent="12.26" remaining="18893" etc="1586653179"/>

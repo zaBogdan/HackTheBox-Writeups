@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.80 scan initiated Tue Feb 11 21:21:41 2020 as: nmap -sC -sV -6 -p- -oA nmap/bigIPv6 dead:beef::250:56ff:feb9:802e -->
+<nmaprun scanner="nmap" args="nmap -sC -sV -6 -p- -oA nmap/bigIPv6 dead:beef::250:56ff:feb9:802e" start="1581448901" startstr="Tue Feb 11 21:21:41 2020" version="7.80" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="65535" services="1-65535"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1581448901" endtime="1581449078"><status state="up" reason="echo-reply" reason_ttl="63"/>
+<address addr="dead:beef::250:56ff:feb9:802e" addrtype="ipv6"/>
+<hostnames>
+</hostnames>
+<ports><extraports state="closed" count="65531">
+<extrareasons reason="resets" count="65531"/>
+</extraports>
+<port protocol="tcp" portid="21"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="ftp" product="Pure-FTPd" method="probed" conf="10"><cpe>cpe:/a:pureftpd:pure-ftpd</cpe></service></port>
+<port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="ssh" product="OpenSSH" version="7.9p1 Debian 10" extrainfo="protocol 2.0" ostype="Linux" method="probed" conf="10"><cpe>cpe:/a:openbsd:openssh:7.9p1</cpe><cpe>cpe:/o:linux:linux_kernel</cpe></service><script id="ssh-hostkey" output="&#xa;  2048 2d:82:60:c1:8c:8d:39:d2:fc:8b:99:5c:a2:47:f0:b0 (RSA)&#xa;  256 1f:1b:0e:9a:91:b1:10:5f:75:20:9b:a0:8e:fd:e4:c1 (ECDSA)&#xa;  256 b5:0c:a1:2c:1c:71:dd:88:a4:28:e0:89:c9:a3:a0:ab (ED25519)"><table>
+<elem key="fingerprint">2d8260c18c8d39d2fc8b995ca247f0b0</elem>
+<elem key="bits">2048</elem>
+<elem key="key">AAAAB3NzaC1yc2EAAAADAQABAAABAQDL3nJIM2fZAaSgYqkWLy13MR4XSJ4IIMIz9fJoXd4TMr/qra4uzQNIW/kEKK8/nilvPP/gCyCLYHDF+SZSQ044WmgRFia7Ppb/9EDYe3qU7ljkL+BN17PyhATE9e6ESQYhMBnjSUaPlFk0xGc7VZbyU2XjveRM5rF7YcG2ztr9Pa/sser37reU3C90H6RmFNuR81OiF3R4/ct/r9a0FpCrcgcwMrsA8+3KvzdAZcu61r9ITZD8NeEx5xzZc9qEsWidXoh0VxDMIpzsiv6Lz4qZ/9VvBgaOFlPsEShnjhjCmh3+o9GOZhX6Ebwaq8eiCi4TSaHp+pPxULu6xIf+1BDj</elem>
+<elem key="type">ssh-rsa</elem>
+</table>
+<table>
+<elem key="fingerprint">1f1b0e9a91b1105f75209ba08efde4c1</elem>
+<elem key="bits">256</elem>
+<elem key="key">AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHAcwji16EzocNj09uu5FUePKNgf8whiC3RsMDAsfte/eU4fHCuHJufIiUXc+NEKz+mCNNQN/iUkQANDDQYF5Bc=</elem>
+<elem key="type">ecdsa-sha2-nistp256</elem>
+</table>
+<table>
+<elem key="fingerprint">b50ca12c1c71dd88a428e089c9a3a0ab</elem>
+<elem key="bits">256</elem>
+<elem key="key">AAAAC3NzaC1lZDI1NTE5AAAAICAsS77mVMJKrJj/gaTVhMv5iiZHuWsM0wm6jYHWA2ze</elem>
+<elem key="type">ssh-ed25519</elem>
+</table>
+</script></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="http" product="nginx" method="probed" conf="10"><cpe>cpe:/a:igor_sysoev:nginx</cpe></service><script id="http-title" output="Ze::a Share"><elem key="title">Ze::a Share</elem>
+</script></port>
+<port protocol="tcp" portid="8730"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="rsync" extrainfo="protocol version 31" method="probed" conf="10"/></port>
+</ports>
+<hostscript><script id="address-info" output="&#xa;  IPv6 EUI-64: &#xa;    MAC address: &#xa;      address: 00:50:56:b9:80:2e&#xa;      manuf: VMware"><table key="IPv6 EUI-64">
+<table key="MAC address">
+<elem key="address">00:50:56:b9:80:2e</elem>
+<elem key="manuf">VMware</elem>
+</table>
+</table>
+</script></hostscript><times srtt="59722" rttvar="799" to="100000"/>
+</host>
+<runstats><finished time="1581449078" timestr="Tue Feb 11 21:24:38 2020" elapsed="177.03" summary="Nmap done at Tue Feb 11 21:24:38 2020; 1 IP address (1 host up) scanned in 177.03 seconds" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

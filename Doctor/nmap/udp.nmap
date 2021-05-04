@@ -1,0 +1,11 @@
+# Nmap 7.80 scan initiated Sat Sep 26 22:00:10 2020 as: nmap -sU -sV -oA nmap/udp -v 10.129.17.15
+Nmap scan report for 10.129.17.15
+Host is up (0.055s latency).
+Not shown: 998 open|filtered ports
+PORT   STATE  SERVICE VERSION
+22/udp closed ssh
+80/udp closed http
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Sep 26 23:23:38 2020 -- 1 IP address (1 host up) scanned in 5008.12 seconds

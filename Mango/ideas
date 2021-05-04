@@ -1,0 +1,30 @@
+We have a website and one over SSL
+
+Looking at the ssl certificate we get a new path "staging-order.mango.htb". Binding this to the box ip ( 10.10.10.162 ) we get a login page over http. 
+Now let's try to check if we have a MangoDB, runing NoSQL
+We can see on BURP that if we try with 'username[$ne]=toto&password[$ne]=toto&login=login' we get a 302 and the redirect gets us to a under construction page. 
+From this one we got that one of the usernames is 'admin@mango.htb'
+The password length of the admin should be 12.
+Use the script from an0nlk page and you will find two users with their password
+Login as mango, as this should be the user and you don't get any user.txt so this is not the user of the box :(
+Let's try a su admin with the remaining password and we got the USER
+
+Heading to root.
+On the enum we get that a SUID vulnerable file is jjs
+Found on gtfo bins that it works :) 
+We have to 'echo "Java.type('java.lang.Runtime').getRuntime().exec('/bin/sh -pc \$@|sh\${IFS}-p _ echo /bin/bash -p <$(tty) >$(tty) 2>$(tty)').waitFor()" | /usr/lib/jvm/java-11-openjdk-amd64/bin/jjs'
+And we got the root.
+
+
+Users:
+admin -> t9KcS3>!0B#2 
+mango -> h3mXK8RhU~f{]f5H 
+
+Flags:
+User -> 79bf31c6c6eb38a8567832f7f8b47e92
+Root -> 8a8ef79a7a2fbb01ea81688424e9ab15
+
+Links: 
+-> https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/NoSQL%20Injection#tools
+-> https://book.hacktricks.xyz/pentesting-web/nosql-injection
+-> https://github.com/an0nlk/Nosql-MongoDB-injection-username-password-enumeration ( USEFULL SCRIPT )

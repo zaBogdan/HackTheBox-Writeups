@@ -1,0 +1,4 @@
+# Nmap 7.80 scan initiated Mon Nov 25 13:55:18 2019 as: nmap -sC -sV -oA small 10.10.10.158
+Host: 10.10.10.158 ()	Status: Up
+Host: 10.10.10.158 ()	Ports: 21/open/tcp//ftp//FileZilla ftpd/, 80/open/tcp//http//Microsoft IIS httpd 8.5/, 135/open/tcp//msrpc//Microsoft Windows RPC/, 139/open/tcp//netbios-ssn//Microsoft Windows netbios-ssn/, 445/open/tcp//microsoft-ds//Microsoft Windows Server 2008 R2 - 2012 microsoft-ds/, 49152/open/tcp//msrpc//Microsoft Windows RPC/, 49153/open/tcp//msrpc//Microsoft Windows RPC/, 49154/open/tcp//msrpc//Microsoft Windows RPC/, 49155/open/tcp//msrpc//Microsoft Windows RPC/, 49156/open/tcp//msrpc//Microsoft Windows RPC/, 49157/open/tcp//msrpc//Microsoft Windows RPC/, 49158/open/tcp//msrpc//Microsoft Windows RPC/	Ignored State: closed (988)
+# Nmap done at Mon Nov 25 13:56:28 2019 -- 1 IP address (1 host up) scanned in 70.19 seconds

